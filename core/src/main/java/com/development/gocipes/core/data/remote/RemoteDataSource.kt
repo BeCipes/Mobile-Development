@@ -17,6 +17,8 @@ class RemoteDataSource @Inject constructor(
 
     suspend fun getUserInfo(token: String) = apiService.getUserInfo(token)
 
+    suspend fun getAllIngridient(token: String) = apiService.getAllIngridient(token)
+
     suspend fun getAllTechnique(token: String) = apiService.getAllTechnique(token)
 
     suspend fun getAllArticle(token: String) = apiService.getAllArticle(token)

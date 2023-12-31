@@ -6,19 +6,26 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.development.gocipes.core.data.local.dummy.DummyIngridients
+import com.development.gocipes.core.data.remote.response.analysis.IngridientItem
 import com.development.gocipes.core.domain.model.food.Analysis
-import com.development.gocipes.databinding.FragmentAnalysisBinding
 import com.development.gocipes.core.presentation.adapter.AnalysisAdapter
+import com.development.gocipes.core.utils.Result
+import com.development.gocipes.databinding.FragmentAnalysisBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class AnalysisFragment : Fragment() {
 
     private var _binding: FragmentAnalysisBinding? = null
     private val binding get() = _binding
     private lateinit var adapterAnalysis: AnalysisAdapter
+    private val ingridientViewModel by viewModels<AnalysisViewModel>()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,7 +38,7 @@ class AnalysisFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupRecycler()
+        ingridientObserver()
         setupShimmer()
     }
 
@@ -54,10 +61,25 @@ class AnalysisFragment : Fragment() {
         }
     }
 
-    private fun setupRecycler() {
-        val listAnalysis = DummyIngridients.dummyIngridient
+    private fun ingridientObserver() {
+        ingridientViewModel.getAllIngridient().observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is Result.Error -> {
+                    Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
+                }
+
+                is Result.Loading -> {}
+
+                is Result.Success -> {
+                    setupRecycler(result.data)
+                }
+            }
+        }
+    }
+
+    private fun setupRecycler(listIngridient: List<IngridientItem>) {
         adapterAnalysis = AnalysisAdapter { analysis ->
-            navigateToDetail(analysis)
+//            navigateToDetail()
         }
         binding?.apply {
             rvAnalysis.apply {
@@ -65,7 +87,7 @@ class AnalysisFragment : Fragment() {
                 layoutManager = LinearLayoutManager(requireActivity(),LinearLayoutManager.VERTICAL, false)
             }
         }
-        adapterAnalysis.submitList(listAnalysis)
+        adapterAnalysis.submitList(listIngridient)
     }
 
     private fun navigateToDetail(analysis: Analysis) {
