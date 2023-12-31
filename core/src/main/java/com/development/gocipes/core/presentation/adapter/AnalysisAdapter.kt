@@ -5,12 +5,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.development.gocipes.core.data.remote.response.analysis.IngridientItem
 import com.development.gocipes.core.databinding.ItemAnalysisBinding
-import com.development.gocipes.core.domain.model.food.Analysis
 import com.development.gocipes.core.utils.Extensions.showImage
 
-class AnalysisAdapter(val data: (Analysis) -> Unit) :
-    ListAdapter<Analysis, AnalysisAdapter.AnalysisViewHolder>(DIFF_CALLBACK) {
+class AnalysisAdapter(val data: (IngridientItem) -> Unit) :
+    ListAdapter<IngridientItem, AnalysisAdapter.AnalysisViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AnalysisViewHolder {
         val binding =
@@ -24,11 +24,11 @@ class AnalysisAdapter(val data: (Analysis) -> Unit) :
 
     inner class AnalysisViewHolder(private val binding: ItemAnalysisBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(analysis: Analysis) {
+        fun bind(analysis: IngridientItem) {
             binding.apply {
-                ivAnalysis.showImage(itemView.context, analysis.imageUrl)
-                tvHeadIngridient.text = analysis.name
-                tvDescIngridient.text = analysis.description
+                ivAnalysis.showImage(itemView.context, analysis.gambar ?:"")
+                tvHeadIngridient.text = analysis.namaBahan
+                tvDescIngridient.text = analysis.deskripsi
             }
             itemView.setOnClickListener { data.invoke(analysis) }
         }
@@ -36,15 +36,15 @@ class AnalysisAdapter(val data: (Analysis) -> Unit) :
 
     companion object {
         val DIFF_CALLBACK =
-            object : DiffUtil.ItemCallback<Analysis>() {
+            object : DiffUtil.ItemCallback<IngridientItem>() {
                 override fun areItemsTheSame(
-                    oldItem: Analysis,
-                    newItem: Analysis
+                    oldItem: IngridientItem,
+                    newItem: IngridientItem
                 ) = oldItem == newItem
 
                 override fun areContentsTheSame(
-                    oldItem: Analysis,
-                    newItem: Analysis
+                    oldItem: IngridientItem,
+                    newItem: IngridientItem
                 ) = oldItem == newItem
             }
     }

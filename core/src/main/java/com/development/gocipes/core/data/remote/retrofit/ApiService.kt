@@ -1,5 +1,6 @@
 package com.development.gocipes.core.data.remote.retrofit
 
+import com.development.gocipes.core.data.remote.response.analysis.IngridientResponse
 import com.development.gocipes.core.data.remote.response.article.ArticleResponse
 import com.development.gocipes.core.data.remote.response.auth.ForgotPasswordResponse
 import com.development.gocipes.core.data.remote.response.auth.GetUserResponse
@@ -44,6 +45,11 @@ interface ApiService {
     suspend fun getUserInfo(
         @Header("Authorization") token: String
     ): GetUserResponse
+
+    @GET("data/bahan")
+    suspend fun getAllIngridient(
+        @Header("Authorization") token: String
+    ): IngridientResponse
 
     @GET("data/teknik")
     suspend fun getAllTechnique(
