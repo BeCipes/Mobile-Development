@@ -27,8 +27,8 @@ class RecipeAdapter(val id: (Int) -> Unit) :
             binding.apply {
                 sivFood.showImage(itemView.context, categoryItem.resep?.gambar ?: "")
                 tvName.text = categoryItem.resep?.namaResep
-                tvMinutes.text = categoryItem.resep?.namaResep
-                tvCategory.text = categoryItem.resep?.deskripsi
+                tvMinutes.text = "${categoryItem.resep?.id} menit"
+                tvCategory.text = categoryItem.kategori.namaKategori
             }
 
             itemView.setOnClickListener { id.invoke(categoryItem.id ?: 0) }
