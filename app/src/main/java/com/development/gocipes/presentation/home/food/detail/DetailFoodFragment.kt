@@ -83,7 +83,7 @@ class DetailFoodFragment : Fragment() {
         binding?.contentDetail?.apply {
             sivFood.showImage(requireActivity(), food?.gambar ?: "")
             tvDescription.text = food?.deskripsi
-            tvMinutes.text = food?.id.toString()
+            tvMinutes.text = "${food?.id} menit"
             contentCalories.apply {
                 pbFat.progress = fat
                 tvFat.text = "$fat%"
