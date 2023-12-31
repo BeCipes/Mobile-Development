@@ -135,8 +135,9 @@
         android:name="com.development.gocipes.presentation.analysis.DetailAnalysisFragment"
         android:label="fragment_detail_analysis"
         tools:layout="@layout/fragment_detail_analysis" >
-        <argument android:name="analysis"
-            app:argType="com.development.gocipes.core.domain.model.food.Analysis" />
+        <argument
+            android:name="id"
+            app:argType="integer" />
     </fragment>
     <include app:graph="@navigation/auth_graph" />
     <fragment

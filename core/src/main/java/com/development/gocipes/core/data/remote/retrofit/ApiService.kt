@@ -8,6 +8,7 @@ import com.development.gocipes.core.data.remote.response.auth.LoginResponse
 import com.development.gocipes.core.data.remote.response.auth.RegisterResponse
 import com.development.gocipes.core.data.remote.response.category.CategoryResponse
 import com.development.gocipes.core.data.remote.response.detail.DetailCategoryResponse
+import com.development.gocipes.core.data.remote.response.detail.DetailIngridientResponse
 import com.development.gocipes.core.data.remote.response.food.FoodResponse
 import com.development.gocipes.core.data.remote.response.technique.TechniqueResponse
 import retrofit2.http.Field
@@ -76,4 +77,10 @@ interface ApiService {
         @Header("Authorization") token: String,
         @Path("kategoriResepId") id: Int
     ): DetailCategoryResponse
+
+    @GET("data/bahan/{bahanId}")
+    suspend fun getIngridientById(
+        @Header("Authorization") token: String,
+        @Path("bahanId") id: Int
+    ): DetailIngridientResponse
 }

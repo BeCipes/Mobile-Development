@@ -12,7 +12,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.development.gocipes.core.data.remote.response.analysis.IngridientItem
-import com.development.gocipes.core.domain.model.food.Analysis
 import com.development.gocipes.core.presentation.adapter.AnalysisAdapter
 import com.development.gocipes.core.utils.Result
 import com.development.gocipes.databinding.FragmentAnalysisBinding
@@ -78,8 +77,8 @@ class AnalysisFragment : Fragment() {
     }
 
     private fun setupRecycler(listIngridient: List<IngridientItem>) {
-        adapterAnalysis = AnalysisAdapter { analysis ->
-//            navigateToDetail()
+        adapterAnalysis = AnalysisAdapter { id ->
+            navigateToDetail(id)
         }
         binding?.apply {
             rvAnalysis.apply {
@@ -90,8 +89,8 @@ class AnalysisFragment : Fragment() {
         adapterAnalysis.submitList(listIngridient)
     }
 
-    private fun navigateToDetail(analysis: Analysis) {
-        val action = AnalysisFragmentDirections.actionAnalysisFragmentToDetailAnalysisFragment(analysis)
+    private fun navigateToDetail(id: Int) {
+        val action = AnalysisFragmentDirections.actionAnalysisFragmentToDetailAnalysisFragment(id)
         findNavController().navigate(action)
     }
 

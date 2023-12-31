@@ -9,7 +9,7 @@ import com.development.gocipes.core.data.remote.response.analysis.IngridientItem
 import com.development.gocipes.core.databinding.ItemAnalysisBinding
 import com.development.gocipes.core.utils.Extensions.showImage
 
-class AnalysisAdapter(val data: (IngridientItem) -> Unit) :
+class AnalysisAdapter(val id: (Int) -> Unit ) :
     ListAdapter<IngridientItem, AnalysisAdapter.AnalysisViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AnalysisViewHolder {
@@ -30,7 +30,7 @@ class AnalysisAdapter(val data: (IngridientItem) -> Unit) :
                 tvHeadIngridient.text = analysis.namaBahan
                 tvDescIngridient.text = analysis.deskripsi
             }
-            itemView.setOnClickListener { data.invoke(analysis) }
+            itemView.setOnClickListener { id.invoke(analysis.id ?: 0) }
         }
     }
 
