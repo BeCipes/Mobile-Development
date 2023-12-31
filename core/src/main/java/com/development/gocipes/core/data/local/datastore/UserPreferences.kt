@@ -8,9 +8,17 @@ interface UserPreferences {
 
     fun getToken(): Flow<String?>
 
+    fun getEmail(): Flow<String>
+
+    fun getPassword(): Flow<String>
+
     suspend fun saveLogInStatus(isLogin: Boolean)
 
     suspend fun saveToken(token: String)
+
+    suspend fun saveEmail(email: String)
+
+    suspend fun savePassword(password: String)
 
     suspend fun deleteToken()
 }

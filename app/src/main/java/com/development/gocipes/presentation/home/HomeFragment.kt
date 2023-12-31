@@ -1,8 +1,6 @@
 package com.development.gocipes.presentation.home
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,20 +9,22 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.development.gocipes.core.data.local.dummy.DummyCategory
-import com.development.gocipes.core.data.local.dummy.DummyFood
-import com.development.gocipes.core.data.local.dummy.DummyInformation
 import com.development.gocipes.core.data.remote.response.auth.UserResult
-import com.development.gocipes.core.domain.model.food.Category
+import com.development.gocipes.core.data.remote.response.category.Category
+import com.development.gocipes.core.data.remote.response.food.FoodItem
+import com.development.gocipes.core.domain.model.article.Article
 import com.development.gocipes.core.domain.model.food.Food
 import com.development.gocipes.core.domain.model.information.Information
+import com.development.gocipes.core.domain.model.technique.Technique
+import com.development.gocipes.core.presentation.adapter.ArticleAdapter
 import com.development.gocipes.core.presentation.adapter.CategoryAdapter
-import com.development.gocipes.core.presentation.adapter.FoodAdapter
-import com.development.gocipes.core.presentation.adapter.InformationAdapter
+import com.development.gocipes.core.presentation.adapter.RecipeAdapter
+import com.development.gocipes.core.presentation.adapter.TechniqueAdapter
 import com.development.gocipes.core.utils.Extensions.showImage
 import com.development.gocipes.core.utils.Result
 import com.development.gocipes.databinding.FragmentHomeBinding
 import com.development.gocipes.presentation.home.article.ArticleViewModel
+import com.development.gocipes.presentation.home.food.FoodViewModel
 import com.development.gocipes.presentation.home.technique.TechniqueViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -34,11 +34,13 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding
     private lateinit var categoryAdapter: CategoryAdapter
-    private lateinit var foodAdapter: FoodAdapter
-    private lateinit var informationAdapter: InformationAdapter
+    private lateinit var techniqueAdapter: TechniqueAdapter
+    private lateinit var articleAdapter: ArticleAdapter
+    private lateinit var recipeAdapter: RecipeAdapter
     private val viewModel by viewModels<HomeViewModel>()
     private val techniqueViewModel by viewModels<TechniqueViewModel>()
     private val articleViewModel by viewModels<ArticleViewModel>()
+    private val foodViewModel by viewModels<FoodViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,32 +52,45 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val listCategory = DummyCategory.dummyCategory
-        val listFood = DummyFood.dummyFood
-        val listArticle = DummyInformation.dummyArticle
-        val listTechnique = DummyInformation.dummyTechnique
 
+        categoryObserver()
         userInfoObserver()
-
-        setupRecyclerCategory(listCategory)
-        setupRecyclerViewFood(listFood)
-        setupRecyclerViewTechnique(listTechnique)
-        setupRecyclerViewGuide(listArticle)
-
-        setupShimmer()
+        articleObserver()
+        techniqueObserver()
+        foodObserver()
     }
 
-    private fun setupShimmer() {
-        binding?.apply {
-            contentHome.root.visibility = View.INVISIBLE
-
-            Handler(Looper.getMainLooper()).postDelayed({
-                contentHome.root.visibility = View.VISIBLE
-                shimmer.apply {
-                    stopShimmer()
-                    visibility = View.INVISIBLE
+    private fun categoryObserver() {
+        viewModel.getCategoryFood().observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is Result.Error -> {
+                    Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
                 }
-            }, 1500)
+
+                is Result.Loading -> {
+
+                }
+
+                is Result.Success -> {
+                    val category = result.data.map { it.kategori }
+                    setupRecyclerCategory(category)
+                }
+            }
+        }
+    }
+
+    private fun foodObserver() {
+        foodViewModel.getAllFood().observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is Result.Error -> {
+                    Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
+                }
+
+                is Result.Loading -> {}
+                is Result.Success -> {
+                    setupRecyclerViewFood(result.data)
+                }
+            }
         }
     }
 
@@ -87,8 +102,9 @@ class HomeFragment : Fragment() {
                 }
 
                 is Result.Loading -> {}
+
                 is Result.Success -> {
-                    result.data
+                    setupRecyclerViewArticle(result.data)
                 }
             }
         }
@@ -98,13 +114,17 @@ class HomeFragment : Fragment() {
         viewModel.getUserInfo().observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Result.Error -> {
+                    onResult()
                     Toast.makeText(requireActivity(), result.message, Toast.LENGTH_SHORT).show()
                 }
 
-                is Result.Loading -> {}
+                is Result.Loading -> {
+                    onLoading()
+                }
+
                 is Result.Success -> {
-                    val user = result.data
-                    setupView(user)
+                    onResult()
+                    setupView(result.data)
                 }
             }
         }
@@ -113,13 +133,15 @@ class HomeFragment : Fragment() {
     private fun techniqueObserver() {
         techniqueViewModel.getAllTechnique().observe(viewLifecycleOwner) { result ->
             when (result) {
+
                 is Result.Error -> {
                     Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
                 }
 
                 is Result.Loading -> {}
+
                 is Result.Success -> {
-                    result.data
+                    setupRecyclerViewTechnique(result.data)
                 }
             }
         }
@@ -141,7 +163,7 @@ class HomeFragment : Fragment() {
 
     private fun setupRecyclerCategory(categories: List<Category>) {
         categoryAdapter = CategoryAdapter { category ->
-            navigateToCategory(category)
+
         }
 
         binding?.contentHome?.rvCategory?.apply {
@@ -153,46 +175,57 @@ class HomeFragment : Fragment() {
         categoryAdapter.submitList(categories)
     }
 
-    private fun setupRecyclerViewFood(listFood: List<Food>) {
-        foodAdapter = FoodAdapter { food ->
-            navigateToFoodGraph(food)
-        }
+    private fun setupRecyclerViewFood(listFood: List<FoodItem>) {
+        recipeAdapter = RecipeAdapter()
 
         binding?.contentHome?.rvFood?.apply {
-            adapter = foodAdapter
+            adapter = recipeAdapter
             layoutManager =
                 LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
             setHasFixedSize(true)
         }
 
-        foodAdapter.submitList(listFood)
+        recipeAdapter.submitList(listFood)
     }
 
-    private fun setupRecyclerViewGuide(listArtikel: List<Information>) {
-        informationAdapter = InformationAdapter { article ->
-            navigateToArticleGraph(article)
-        }
+    private fun setupRecyclerViewArticle(listArticle: List<Article>) {
+        articleAdapter = ArticleAdapter()
 
         binding?.contentHome?.rvGuide?.apply {
-            adapter = informationAdapter
+            adapter = articleAdapter
             layoutManager =
                 LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
         }
 
-        informationAdapter.submitList(listArtikel)
+        articleAdapter.submitList(listArticle)
     }
 
-    private fun setupRecyclerViewTechnique(listTechnique: List<Information>) {
-        informationAdapter = InformationAdapter { technique ->
-            navigateToTechniqueGraph(technique)
-        }
+    private fun setupRecyclerViewTechnique(listTechnique: List<Technique>) {
+        techniqueAdapter = TechniqueAdapter()
+
         binding?.contentHome?.rvTechnique?.apply {
-            adapter = informationAdapter
+            adapter = techniqueAdapter
             layoutManager =
                 LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
         }
 
-        informationAdapter.submitList(listTechnique)
+        techniqueAdapter.submitList(listTechnique)
+    }
+
+    private fun onLoading() {
+        binding?.apply {
+            contentHome.root.visibility = View.GONE
+        }
+    }
+
+    private fun onResult() {
+        binding?.apply {
+            contentHome.root.visibility = View.VISIBLE
+            shimmer.apply {
+                stopShimmer()
+                visibility = View.GONE
+            }
+        }
     }
 
     private fun navigateToFood() {
@@ -237,11 +270,11 @@ class HomeFragment : Fragment() {
     }
 
     private fun navigateToCategory(category: Category) {
-        val action =
-            HomeFragmentDirections.actionHomeFragmentToCategoryFragment(
-                category
-            )
-        findNavController().navigate(action)
+//        val action =
+//            HomeFragmentDirections.actionHomeFragmentToCategoryFragment(
+////                category
+//            )
+//        findNavController().navigate(action)
     }
 
     override fun onDestroy() {

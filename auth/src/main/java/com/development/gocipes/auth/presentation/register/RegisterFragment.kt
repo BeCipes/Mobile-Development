@@ -43,6 +43,10 @@ class RegisterFragment : Fragment() {
                 val email = tilEmail.editText?.text.toString().trim()
                 val password = tilPassword.editText?.text.toString().trim()
 
+                viewModel.apply {
+                    saveEmail(email)
+                    savePassword(password)
+                }
                 registerObserver(firstName, lastName, email, password)
             }
         }

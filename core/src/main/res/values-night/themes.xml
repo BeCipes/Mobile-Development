@@ -30,12 +30,4 @@
         <item name="colorSurfaceInverse">@color/md_theme_dark_inverseSurface</item>
         <item name="colorPrimaryInverse">@color/md_theme_dark_inversePrimary</item>
     </style>
-
-    <style name="Widget.App.CardStyle"
-        parent="Widget.Material3.CardView.Elevated">
-        <item name="materialThemeOverlay">@style/Widget.App.CardStyle</item>
-    </style>
-    <style name="materialThemeOverlay">
-        <item name="colorPrimary">@color/black</item>
-    </style>
 </resources>

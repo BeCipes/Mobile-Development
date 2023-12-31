@@ -5,6 +5,8 @@ import com.development.gocipes.core.data.remote.response.auth.ForgotPasswordResp
 import com.development.gocipes.core.data.remote.response.auth.GetUserResponse
 import com.development.gocipes.core.data.remote.response.auth.LoginResponse
 import com.development.gocipes.core.data.remote.response.auth.RegisterResponse
+import com.development.gocipes.core.data.remote.response.category.CategoryResponse
+import com.development.gocipes.core.data.remote.response.food.FoodResponse
 import com.development.gocipes.core.data.remote.response.technique.TechniqueResponse
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -50,4 +52,14 @@ interface ApiService {
     suspend fun getAllArticle(
         @Header("Authorization") token: String
     ): ArticleResponse
+
+    @GET("data/resep")
+    suspend fun getAllFood(
+        @Header("Authorization") token: String
+    ): FoodResponse
+
+    @GET("data/kategori-resep")
+    suspend fun getCategoryFood(
+        @Header("Authorization") token: String
+    ): CategoryResponse
 }

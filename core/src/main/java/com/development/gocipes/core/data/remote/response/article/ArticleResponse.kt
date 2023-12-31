@@ -35,7 +35,7 @@ data class ArticleItem(
 	val headline: String? = null,
 
 	@field:SerializedName("gambar")
-	val gambar: String? = null,
+	val gambar: List<String?>? = null,
 
 	@field:SerializedName("isi")
 	val isi: String? = null

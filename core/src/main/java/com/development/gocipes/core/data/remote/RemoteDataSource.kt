@@ -20,4 +20,8 @@ class RemoteDataSource @Inject constructor(
     suspend fun getAllTechnique(token: String) = apiService.getAllTechnique(token)
 
     suspend fun getAllArticle(token: String) = apiService.getAllArticle(token)
+
+    suspend fun getAllFood(token: String) = apiService.getAllFood(token)
+
+    suspend fun getCategoryFood(token: String) = apiService.getCategoryFood(token)
 }

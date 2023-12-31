@@ -3,7 +3,9 @@ package com.development.gocipes.core.data.local.datastore
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
+import com.development.gocipes.core.utils.Constants.EMAIL_KEY
 import com.development.gocipes.core.utils.Constants.LOGIN_STATUS_KEY
+import com.development.gocipes.core.utils.Constants.PASSWORD_KEY
 import com.development.gocipes.core.utils.Constants.TOKEN_KEY
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -22,6 +24,16 @@ class UserPreferencesImpl @Inject constructor(
             it[TOKEN_KEY]
         }
 
+    override fun getEmail(): Flow<String> =
+        dataStore.data.map {
+            it[EMAIL_KEY] ?: ""
+        }
+
+    override fun getPassword(): Flow<String> =
+        dataStore.data.map {
+            it[PASSWORD_KEY] ?: ""
+        }
+
     override suspend fun saveLogInStatus(isLogin: Boolean) {
         dataStore.edit {
             it[LOGIN_STATUS_KEY] = isLogin
@@ -31,6 +43,18 @@ class UserPreferencesImpl @Inject constructor(
     override suspend fun saveToken(token: String) {
         dataStore.edit {
             it[TOKEN_KEY] = token
+        }
+    }
+
+    override suspend fun saveEmail(email: String) {
+        dataStore.edit {
+            it[EMAIL_KEY] = email
+        }
+    }
+
+    override suspend fun savePassword(password: String) {
+        dataStore.edit {
+            it[PASSWORD_KEY] = password
         }
     }
 

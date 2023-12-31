@@ -8,8 +8,9 @@
     <string name="category">Kategori</string>
     <string name="search_menu">Cari Menu Masakan</string>
     <string name="health_cook">Masak makanan sehat lebih menyenangkan!!</string>
-    <string name="superior_food">Makanan Paling Unggul</string>
+    <string name="superior_food">Makanan Terbaru</string>
     <string name="guide">Artikel</string>
+    <string name="copyright">&#169; BeCipes 2023 by <b>Eternal Light</b></string>
     <string name="technique">Teknik Memasak</string>
     <string name="favorite_title">Olahan Favorite</string>
     <string name="akun_saya">Akun Saya</string>

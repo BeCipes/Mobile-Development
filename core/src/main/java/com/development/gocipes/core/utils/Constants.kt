@@ -5,11 +5,9 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 
 object Constants {
 
-    const val EMAIL = "email"
-    const val PASSWORD = "password"
-    const val FIRST_NAME = "first_name"
-
     const val USER_PREFERENCES = "presence_preferences"
     val TOKEN_KEY = stringPreferencesKey("mToken")
+    val EMAIL_KEY = stringPreferencesKey("email")
+    val PASSWORD_KEY = stringPreferencesKey("password")
     val LOGIN_STATUS_KEY = booleanPreferencesKey("login")
 }

@@ -19,9 +19,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.development.gocipes.core.data.local.dummy.DummyInformation
+import com.development.gocipes.core.domain.model.article.Article
 import com.development.gocipes.core.domain.model.information.Information
-import com.development.gocipes.core.presentation.adapter.InformationGridAdapter
+import com.development.gocipes.core.presentation.adapter.ArticleGridAdapter
 import com.development.gocipes.core.utils.Result
 import com.development.gocipes.databinding.FragmentArticleBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,7 +31,7 @@ class ArticleFragment : Fragment() {
 
     private var _binding: FragmentArticleBinding? = null
     private val binding get() = _binding
-    private lateinit var informationGridAdapter: InformationGridAdapter
+    private lateinit var articleGridAdapter: ArticleGridAdapter
     private val viewModel by viewModels<ArticleViewModel>()
 
     override fun onCreateView(
@@ -46,7 +46,7 @@ class ArticleFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupToolbar()
-        setupView()
+        articleObserver()
         setupShimmer()
     }
 
@@ -91,33 +91,52 @@ class ArticleFragment : Fragment() {
         viewModel.getAllArticle().observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Result.Error -> {
+                    onResult()
                     Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
                 }
 
-                is Result.Loading -> {}
+                is Result.Loading -> {
+                    onLoading()
+                }
+
                 is Result.Success -> {
-                    result.data
+                    onResult()
+                    setupView(result.data)
                 }
             }
         }
     }
 
-    private fun setupView() {
-        val data = DummyInformation.dummyArticle
-        informationGridAdapter = InformationGridAdapter { article ->
-            navigateToArticleGraph(article)
-        }
+    private fun setupView(article: List<Article>) {
+        articleGridAdapter = ArticleGridAdapter {}
+
         val gridCount =
             if (requireActivity().resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) 2 else 4
 
         binding?.apply {
             rvArticle.apply {
-                adapter = informationGridAdapter
+                adapter = articleGridAdapter
                 layoutManager = GridLayoutManager(requireActivity(), gridCount)
             }
         }
 
-        informationGridAdapter.submitList(data)
+        articleGridAdapter.submitList(article)
+    }
+
+    private fun onLoading() {
+        binding?.apply {
+            rvArticle.visibility = View.GONE
+        }
+    }
+
+    private fun onResult() {
+        binding?.apply {
+            rvArticle.visibility = View.VISIBLE
+            shimmer.apply {
+                stopShimmer()
+                visibility = View.GONE
+            }
+        }
     }
 
     private fun navigateToArticleGraph(information: Information) {

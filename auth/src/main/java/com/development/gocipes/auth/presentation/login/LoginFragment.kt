@@ -1,5 +1,6 @@
 package com.development.gocipes.auth.presentation.login
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.development.gocipes.auth.R
 import com.development.gocipes.auth.databinding.FragmentLoginBinding
@@ -37,13 +37,24 @@ class LoginFragment : Fragment() {
 
     private fun setupView() {
         binding?.contentLogin?.apply {
+            viewModel.getEmail().observe(viewLifecycleOwner) { email ->
+                tilEmail.editText?.setText(email)
+            }
+
+            viewModel.getPassword().observe(viewLifecycleOwner) { password ->
+                tilPassword.editText?.setText(password)
+            }
 
             btnLogin.setOnClickListener {
                 val email = tilEmail.editText?.text.toString().trim()
                 val password = tilPassword.editText?.text.toString().trim()
 
+
                 loginObserver(email, password)
             }
+
+            credentialSavedObserved()
+
             btnRegister.setOnClickListener { navigateToRegister() }
             tvForgotPassword.setOnClickListener { navigateToForgot() }
         }
@@ -69,9 +80,16 @@ class LoginFragment : Fragment() {
 
                 is Result.Success -> {
                     val token = result.data.token?.accessToken
-                    viewModel.saveCredentials(isLogin = true, token = token ?: "")
-                    navigateToMain()
+                    viewModel.saveCredentials(isLogin = true, token = token.toString())
                 }
+            }
+        }
+    }
+
+    private fun credentialSavedObserved() {
+        viewModel.isCredentialSaved.observe(viewLifecycleOwner) { isSaved ->
+            if (isSaved) {
+                navigateToMain()
             }
         }
     }
@@ -83,13 +101,13 @@ class LoginFragment : Fragment() {
     }
 
     private fun navigateToMain() {
-        val option = NavOptions.Builder()
-            .setPopUpTo(R.id.auth_graph, inclusive = true)
-            .build()
-        findNavController().navigate(
-            LoginFragmentDirections.actionLoginFragmentToMainActivity(),
-            option
+        startActivity(
+            Intent(
+                requireActivity(),
+                Class.forName("com.development.gocipes.presentation.MainActivity")
+            )
         )
+        activity?.finish()
     }
 
     private fun navigateToForgot() {

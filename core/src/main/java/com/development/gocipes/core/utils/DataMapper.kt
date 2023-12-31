@@ -16,7 +16,7 @@ fun TechniqueItem.toDomain() = Technique(
 
 fun ArticleItem.toDomain() = Article(
     id = id,
-    cover = gambar,
+    cover = gambar?.get(0),
     headline = headline,
     penulis = penulis,
     sumber = sumber,

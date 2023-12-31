@@ -7,13 +7,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
-import com.development.gocipes.R
 import com.development.gocipes.core.data.remote.response.auth.UserResult
 import com.development.gocipes.core.utils.Extensions.showImage
 import com.development.gocipes.core.utils.Result
 import com.development.gocipes.databinding.FragmentProfileBinding
+import com.development.gocipes.presentation.profile.LogoutDialog.Companion.TAG
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -25,27 +24,16 @@ class ProfileFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         _binding = FragmentProfileBinding.inflate(layoutInflater, container, false)
         return binding?.root
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         getUserObserver()
-
-        binding?.btnProfileEdit?.setOnClickListener {
-            onClickEdit()
-        }
-        binding?.btnProfileSimpan?.setOnClickListener {
-            onClickSave()
-        }
-        binding?.btnLogout?.setOnClickListener {
-            logout()
-        }
     }
 
     private fun getUserObserver() {
@@ -54,6 +42,7 @@ class ProfileFragment : Fragment() {
                 is Result.Error -> {
                     Toast.makeText(requireActivity(), result.message, Toast.LENGTH_SHORT).show()
                 }
+
                 is Result.Loading -> {}
                 is Result.Success -> {
                     setupView(result.data)
@@ -81,6 +70,18 @@ class ProfileFragment : Fragment() {
 
             btnProfileInfoAplikasi.setOnClickListener {
                 navigateToInfoApp()
+            }
+
+            binding?.btnProfileEdit?.setOnClickListener {
+                onClickEdit()
+            }
+            binding?.btnProfileSimpan?.setOnClickListener {
+                onClickSave()
+            }
+
+            btnLogout.setOnClickListener {
+                val dialog = LogoutDialog()
+                dialog.show(childFragmentManager, TAG)
             }
         }
     }
@@ -120,12 +121,5 @@ class ProfileFragment : Fragment() {
             edtProfilePasswordUser.isEnabled = false
             edtProfileUsernameUser.isEnabled = false
         }
-    }
-
-    private fun logout() {
-        val option = NavOptions.Builder()
-            .setPopUpTo(R.id.main_graph, inclusive = true)
-            .build()
-        findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToAuthGraph(), option)
     }
 }

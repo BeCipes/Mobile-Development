@@ -5,8 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.development.gocipes.core.data.remote.response.category.Category
 import com.development.gocipes.core.databinding.ItemCategoryBinding
-import com.development.gocipes.core.domain.model.food.Category
 import com.development.gocipes.core.utils.Extensions.showImage
 
 class CategoryAdapter(val data: (Category) -> Unit) :
@@ -28,8 +28,8 @@ class CategoryAdapter(val data: (Category) -> Unit) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(category: Category) {
             binding.apply {
-                sivCategory.showImage(itemView.context, category.imageUrl)
-                tvName.text = category.name
+                sivCategory.showImage(itemView.context, category.gambar ?: "")
+                tvName.text = category.namaKategori
             }
 
             itemView.setOnClickListener { data.invoke(category) }

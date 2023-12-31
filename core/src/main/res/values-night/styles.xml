@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Widget.App.CardStyle"
+        parent="Widget.Material3.CardView.Elevated">
+        <item name="materialThemeOverlay">@style/Widget.App.CardStyle</item>
+    </style>
+
+    <style name="materialThemeOverlay">
+        <item name="colorPrimary">@color/black</item>
+    </style>
+
+    <style name="AppTheme.Dialog.MyDialogTheme" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowMinWidthMajor">90%</item>
+        <item name="android:windowMinWidthMinor">90%</item>
+    </style>
+</resources>

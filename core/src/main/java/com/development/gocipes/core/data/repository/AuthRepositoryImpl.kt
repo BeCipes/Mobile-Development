@@ -9,6 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import retrofit2.HttpException
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -63,18 +64,25 @@ class AuthRepositoryImpl @Inject constructor(
             val response = remoteDataSource.getUserInfo(token)
             val result = response.data
             emit(Result.Success(result))
-        } catch (e: Exception) {
-            emit(Result.Error(e.message))
+        } catch (e: HttpException) {
+            emit(Result.Error(e.message()))
         }
     }.flowOn(Dispatchers.IO)
 
     override fun isLoggedIn(): Flow<Boolean> = localDataSource.isLoggedIn()
 
     override fun getToken(): Flow<String?> = localDataSource.getToken()
+    override fun getEmail(): Flow<String> = localDataSource.getEmail()
+
+    override fun getPassword(): Flow<String> = localDataSource.getPassword()
 
     override suspend fun setLoginStatus(isLogin: Boolean) = localDataSource.saveLoginStatus(isLogin)
 
     override suspend fun saveToken(token: String) = localDataSource.saveToken(token)
+
+    override suspend fun saveEmail(email: String) = localDataSource.saveEmail(email)
+
+    override suspend fun savePassword(password: String) = localDataSource.savePassword(password)
 
     override suspend fun deleteToken() = localDataSource.deleteToken()
 }

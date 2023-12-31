@@ -56,14 +56,6 @@
         <item name="cornerSize">50%</item>
     </style>
 
-    <style name="Widget.App.CardStyle"
-        parent="Widget.Material3.CardView.Elevated">
-        <item name="materialThemeOverlay">@style/Widget.App.CardStyle</item>
-    </style>
-    <style name="materialThemeOverlay">
-        <item name="colorPrimary">@color/white</item>
-    </style>
-
     <style name="AppSearchView" parent="Widget.AppCompat.SearchView" >
         <item name="android:textSize">16sp</item>
     </style>
