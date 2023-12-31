@@ -7,10 +7,9 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.development.gocipes.core.R
 import com.development.gocipes.core.databinding.ItemIngredientsBinding
-import com.development.gocipes.core.domain.model.food.Ingredient
 
 class IngredientAdapter :
-    ListAdapter<Ingredient, IngredientAdapter.IngredientViewHolder>(DIFF_CALLBACK) {
+    ListAdapter<String, IngredientAdapter.IngredientViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IngredientViewHolder {
         val binding =
@@ -24,19 +23,19 @@ class IngredientAdapter :
 
     inner class IngredientViewHolder(private val binding: ItemIngredientsBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(ingredient: Ingredient) {
+        fun bind(ingredient: String) {
             binding.tvIngredients.text =
-                itemView.context.getString(R.string.item_ingredients, ingredient.description)
+                itemView.context.getString(R.string.item_ingredients, ingredient)
         }
     }
 
     companion object {
         val DIFF_CALLBACK =
-            object : DiffUtil.ItemCallback<Ingredient>() {
-                override fun areItemsTheSame(oldItem: Ingredient, newItem: Ingredient) =
+            object : DiffUtil.ItemCallback<String>() {
+                override fun areItemsTheSame(oldItem: String, newItem: String) =
                     oldItem == newItem
 
-                override fun areContentsTheSame(oldItem: Ingredient, newItem: Ingredient) =
+                override fun areContentsTheSame(oldItem: String, newItem: String) =
                     oldItem == newItem
             }
     }

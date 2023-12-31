@@ -1,30 +1,34 @@
 package com.development.gocipes.presentation.home.food.detail
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.development.gocipes.core.data.remote.response.detail.DetailCategoryItem
+import com.development.gocipes.core.data.remote.response.food.FoodItem
 import com.development.gocipes.core.domain.model.food.Food
-import com.development.gocipes.core.domain.model.food.Ingredient
 import com.development.gocipes.core.presentation.adapter.IngredientAdapter
 import com.development.gocipes.core.utils.Extensions.showImage
+import com.development.gocipes.core.utils.Result
 import com.development.gocipes.databinding.FragmentDetailFoodBinding
+import dagger.hilt.android.AndroidEntryPoint
 import com.development.gocipes.core.R as Resource
 
+@AndroidEntryPoint
 class DetailFoodFragment : Fragment() {
 
     private var _binding: FragmentDetailFoodBinding? = null
@@ -33,6 +37,7 @@ class DetailFoodFragment : Fragment() {
     private var menuDetail: Menu? = null
     private var statusFavorite: Boolean = false
     private lateinit var ingredientAdapter: IngredientAdapter
+    private val viewModel by viewModels<DetailFoodViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,51 +50,55 @@ class DetailFoodFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val foodArgs = navArgs.food
-
-        setupView(foodArgs)
-        setupRecyclerIngredient(foodArgs.ingredients)
-        setupToolbar(foodArgs)
-        setupShimmer()
+        val idArgs = navArgs.id
+        getFoodByIdObserver(idArgs)
     }
 
-    private fun setupShimmer() {
-        binding?.apply {
-            contentDetail.root.visibility = View.INVISIBLE
-            toolbar.visibility = View.INVISIBLE
-            btnCook.visibility = View.INVISIBLE
-
-            Handler(Looper.getMainLooper()).postDelayed({
-                contentDetail.root.visibility = View.VISIBLE
-                toolbar.visibility = View.VISIBLE
-                btnCook.visibility = View.VISIBLE
-                shimmer.apply {
-                    stopShimmer()
-                    visibility = View.INVISIBLE
+    private fun getFoodByIdObserver(id: Int) {
+        viewModel.getFoodById(id).observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is Result.Error -> {
+                    onResult()
+                    Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
                 }
-            }, 1000)
-        }
-    }
 
-    private fun setupView(food: Food) {
-        binding?.contentDetail?.apply {
-            sivFood.showImage(requireActivity(), food.imageUrl)
-            tvDescription.text = food.description
-            tvMinutes.text = food.minutes
-            contentCalories.apply {
-                pbFat.progress = food.fat
-                tvFat.text = "${food.fat}%"
-                pbCarbohydrates.progress = food.carbohydrates
-                tvCarbohydrates.text = "${food.carbohydrates}%"
-                pbProtein.progress = food.protein
-                tvProtein.text = "${food.protein}%"
+                is Result.Loading -> {
+                    onLoading()
+                }
+
+                is Result.Success -> {
+                    onResult()
+                    setupView(result.data)
+                }
             }
         }
-
-        binding?.btnCook?.setOnClickListener { navigateToCook(food) }
     }
 
-    private fun setupRecyclerIngredient(listIngredient: List<Ingredient>) {
+    private fun setupView(categoryItem: DetailCategoryItem) {
+        val food = categoryItem.resep
+        val fat = food?.informasiGizi?.lemak ?: 0
+        val carbohydrate = food?.informasiGizi?.karbohidrat ?: 0
+        val protein = food?.informasiGizi?.protein ?: 0
+
+        binding?.contentDetail?.apply {
+            sivFood.showImage(requireActivity(), food?.gambar ?: "")
+            tvDescription.text = food?.deskripsi
+            tvMinutes.text = food?.id.toString()
+            contentCalories.apply {
+                pbFat.progress = fat
+                tvFat.text = "$fat%"
+                pbCarbohydrates.progress = carbohydrate
+                tvCarbohydrates.text = "$carbohydrate%"
+                pbProtein.progress = protein
+                tvProtein.text = "$protein%"
+            }
+        }
+        setupRecyclerIngredient(food?.bahan ?: emptyList())
+        setupToolbar(food)
+        binding?.btnCook?.setOnClickListener { }
+    }
+
+    private fun setupRecyclerIngredient(listIngredient: List<String>) {
         ingredientAdapter = IngredientAdapter()
 
         binding?.contentDetail?.rvIngredients?.apply {
@@ -101,12 +110,12 @@ class DetailFoodFragment : Fragment() {
         ingredientAdapter.submitList(listIngredient)
     }
 
-    private fun setupToolbar(food: Food) {
+    private fun setupToolbar(food: FoodItem?) {
         (activity as AppCompatActivity).apply {
             setSupportActionBar(binding?.toolbar)
             supportActionBar?.apply {
                 setDisplayHomeAsUpEnabled(true)
-                title = food.name
+                title = food?.namaResep
             }
         }
 
@@ -154,6 +163,26 @@ class DetailFoodFragment : Fragment() {
                 food
             )
         findNavController().navigate(action)
+    }
+
+    private fun onLoading() {
+        binding?.apply {
+            contentDetail.root.visibility = View.INVISIBLE
+            toolbar.visibility = View.INVISIBLE
+            btnCook.visibility = View.INVISIBLE
+        }
+    }
+
+    private fun onResult() {
+        binding?.apply {
+            contentDetail.root.visibility = View.VISIBLE
+            toolbar.visibility = View.VISIBLE
+            btnCook.visibility = View.VISIBLE
+            shimmer.apply {
+                stopShimmer()
+                visibility = View.INVISIBLE
+            }
+        }
     }
 
     override fun onDestroy() {

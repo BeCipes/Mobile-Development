@@ -18,9 +18,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
-import com.development.gocipes.core.domain.model.food.Food
-import com.development.gocipes.databinding.FragmentCategoryBinding
 import com.development.gocipes.core.presentation.adapter.FoodGridAdapter
+import com.development.gocipes.databinding.FragmentCategoryBinding
 
 class CategoryFragment : Fragment() {
 
@@ -31,7 +30,7 @@ class CategoryFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         _binding = FragmentCategoryBinding.inflate(layoutInflater, container, false)
         return binding?.root
@@ -88,8 +87,8 @@ class CategoryFragment : Fragment() {
         val gridCount =
             if (requireActivity().resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) 2 else 4
 
-        foodGridAdapter = FoodGridAdapter{ food ->
-            navigateToDetailFood(food)
+        foodGridAdapter = FoodGridAdapter { food ->
+//            navigateToDetailFood(food)
         }
 
         binding?.rvFood?.apply {
@@ -101,10 +100,10 @@ class CategoryFragment : Fragment() {
         foodGridAdapter.submitList(foodList)
     }
 
-    private fun navigateToDetailFood(food: Food) {
-        val action = CategoryFragmentDirections.actionCategoryFragmentToDetailFoodFragment(food)
-        findNavController().navigate(action)
-    }
+//    private fun navigateToDetailFood(food: Food) {
+//        val action = CategoryFragmentDirections.actionCategoryFragmentToDetailFoodFragment(food)
+//        findNavController().navigate(action)
+//    }
 
     override fun onDestroy() {
         super.onDestroy()

@@ -115,8 +115,8 @@ class SearchFragment : Fragment() {
     }
 
     private fun navigateToDetailFood(food: Food) {
-        val action = SearchFragmentDirections.actionSearchFragmentToDetailFoodFragment(food)
-        findNavController().navigate(action)
+//        val action = SearchFragmentDirections.actionSearchFragmentToDetailFoodFragment(food)
+//        findNavController().navigate(action)
     }
 
     override fun onDestroy() {

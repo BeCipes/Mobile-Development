@@ -7,8 +7,10 @@ import com.development.gocipes.core.domain.repository.TechniqueRepository
 import com.development.gocipes.core.utils.Result
 import com.development.gocipes.core.utils.TokenHelper
 import com.development.gocipes.core.utils.toDomain
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -27,5 +29,5 @@ class TechniqueRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             emit(Result.Error(e.message))
         }
-    }
+    }.flowOn(Dispatchers.IO)
 }

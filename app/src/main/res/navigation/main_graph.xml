@@ -144,12 +144,12 @@
         android:name="com.development.gocipes.presentation.home.food.detail.DetailFoodFragment"
         android:label="fragment_detail_food"
         tools:layout="@layout/fragment_detail_food" >
-        <argument
-            android:name="food"
-            app:argType="com.development.gocipes.core.domain.model.food.Food" />
         <action
             android:id="@+id/action_detailFoodFragment_to_cookFragment"
             app:destination="@id/cookFragment" />
+        <argument
+            android:name="id"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/cookFragment"

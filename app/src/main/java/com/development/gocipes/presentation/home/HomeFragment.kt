@@ -11,9 +11,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.development.gocipes.core.data.remote.response.auth.UserResult
 import com.development.gocipes.core.data.remote.response.category.Category
-import com.development.gocipes.core.data.remote.response.food.FoodItem
+import com.development.gocipes.core.data.remote.response.category.CategoryItem
 import com.development.gocipes.core.domain.model.article.Article
-import com.development.gocipes.core.domain.model.food.Food
 import com.development.gocipes.core.domain.model.information.Information
 import com.development.gocipes.core.domain.model.technique.Technique
 import com.development.gocipes.core.presentation.adapter.ArticleAdapter
@@ -80,7 +79,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun foodObserver() {
-        foodViewModel.getAllFood().observe(viewLifecycleOwner) { result ->
+        viewModel.getCategoryFood().observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Result.Error -> {
                     Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
@@ -175,8 +174,10 @@ class HomeFragment : Fragment() {
         categoryAdapter.submitList(categories)
     }
 
-    private fun setupRecyclerViewFood(listFood: List<FoodItem>) {
-        recipeAdapter = RecipeAdapter()
+    private fun setupRecyclerViewFood(listFood: List<CategoryItem>) {
+        recipeAdapter = RecipeAdapter { id ->
+            navigateToFoodGraph(id)
+        }
 
         binding?.contentHome?.rvFood?.apply {
             adapter = recipeAdapter
@@ -234,8 +235,8 @@ class HomeFragment : Fragment() {
         findNavController().navigate(action)
     }
 
-    private fun navigateToFoodGraph(food: Food) {
-        val action = HomeFragmentDirections.actionHomeFragmentToDetailFoodFragment(food)
+    private fun navigateToFoodGraph(id: Int) {
+        val action = HomeFragmentDirections.actionHomeFragmentToDetailFoodFragment(id)
         findNavController().navigate(action)
     }
 

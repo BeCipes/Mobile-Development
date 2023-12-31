@@ -12,5 +12,5 @@ data class CategoryItem(
     val id: Int? = null,
 
     @field:SerializedName("resep")
-    val resep: FoodItem? = null
+    val resep: FoodItem? = null,
 )
