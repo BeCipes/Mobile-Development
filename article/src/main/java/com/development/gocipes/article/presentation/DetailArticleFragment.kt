@@ -1,8 +1,6 @@
 package com.development.gocipes.article.presentation
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -46,35 +44,22 @@ class DetailArticleFragment : Fragment() {
 
         articleByIdObserver(idArgs)
         setupToolbar()
-        setupShimmer()
-    }
-
-    private fun setupShimmer() {
-        binding?.apply {
-            contentDetailArticle.root.visibility = View.INVISIBLE
-            toolbar.visibility = View.INVISIBLE
-
-            Handler(Looper.getMainLooper()).postDelayed({
-                contentDetailArticle.root.visibility = View.VISIBLE
-                toolbar.visibility = View.VISIBLE
-
-                shimmer.apply {
-                    stopShimmer()
-                    visibility = View.INVISIBLE
-                }
-            }, 2000)
-        }
     }
 
     private fun articleByIdObserver(id: Int) {
         viewModel.getArticleById(id).observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Result.Error -> {
+                    onResult()
                     Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
                 }
 
-                is Result.Loading -> {}
+                is Result.Loading -> {
+                    onLoading()
+                }
+
                 is Result.Success -> {
+                    onResult()
                     setupView(result.data)
                 }
             }
@@ -111,6 +96,25 @@ class DetailArticleFragment : Fragment() {
                 return true
             }
         }, viewLifecycleOwner, Lifecycle.State.CREATED)
+    }
+
+    private fun onLoading() {
+        binding?.apply {
+            contentDetailArticle.root.visibility = View.INVISIBLE
+            toolbar.visibility = View.INVISIBLE
+        }
+    }
+
+    private fun onResult() {
+        binding?.apply {
+            contentDetailArticle.root.visibility = View.VISIBLE
+            toolbar.visibility = View.VISIBLE
+
+            shimmer.apply {
+                stopShimmer()
+                visibility = View.INVISIBLE
+            }
+        }
     }
 
     override fun onDestroy() {

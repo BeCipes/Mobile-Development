@@ -1,8 +1,6 @@
 package com.development.gocipes.presentation.analysis
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,7 +26,7 @@ class AnalysisFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         _binding = FragmentAnalysisBinding.inflate(layoutInflater, container, false)
         return binding?.root
@@ -38,38 +36,22 @@ class AnalysisFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         ingridientObserver()
-        setupShimmer()
-    }
-
-    private fun setupShimmer() {
-        binding?.apply {
-            searchBar.visibility = View.INVISIBLE
-            tvAnalysisHead.visibility = View.INVISIBLE
-            rvAnalysis.visibility = View.INVISIBLE
-
-            Handler(Looper.getMainLooper()).postDelayed({
-                searchBar.visibility = View.VISIBLE
-                tvAnalysisHead.visibility = View.VISIBLE
-                rvAnalysis.visibility = View.VISIBLE
-
-                shimmer.apply {
-                    stopShimmer()
-                    visibility = View.INVISIBLE
-                }
-            }, 1500)
-        }
     }
 
     private fun ingridientObserver() {
         ingridientViewModel.getAllIngridient().observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Result.Error -> {
+                    onResult()
                     Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
                 }
 
-                is Result.Loading -> {}
+                is Result.Loading -> {
+                    onLoading()
+                }
 
                 is Result.Success -> {
+                    onResult()
                     setupRecycler(result.data)
                 }
             }
@@ -83,7 +65,8 @@ class AnalysisFragment : Fragment() {
         binding?.apply {
             rvAnalysis.apply {
                 adapter = adapterAnalysis
-                layoutManager = LinearLayoutManager(requireActivity(),LinearLayoutManager.VERTICAL, false)
+                layoutManager =
+                    LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
             }
         }
         adapterAnalysis.submitList(listIngridient)
@@ -92,6 +75,27 @@ class AnalysisFragment : Fragment() {
     private fun navigateToDetail(id: Int) {
         val action = AnalysisFragmentDirections.actionAnalysisFragmentToDetailAnalysisFragment(id)
         findNavController().navigate(action)
+    }
+
+    private fun onLoading() {
+        binding?.apply {
+            searchBar.visibility = View.INVISIBLE
+            tvAnalysisHead.visibility = View.INVISIBLE
+            rvAnalysis.visibility = View.INVISIBLE
+        }
+    }
+
+    private fun onResult() {
+        binding?.apply {
+            searchBar.visibility = View.VISIBLE
+            tvAnalysisHead.visibility = View.VISIBLE
+            rvAnalysis.visibility = View.VISIBLE
+
+            shimmer.apply {
+                stopShimmer()
+                visibility = View.INVISIBLE
+            }
+        }
     }
 
     override fun onDestroy() {

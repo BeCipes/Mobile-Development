@@ -1,8 +1,6 @@
 package com.development.gocipes.presentation.analysis
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -24,7 +22,6 @@ import com.development.gocipes.core.utils.Result
 import com.development.gocipes.databinding.FragmentDetailAnalysisBinding
 import dagger.hilt.android.AndroidEntryPoint
 
-
 @AndroidEntryPoint
 class DetailAnalysisFragment : Fragment() {
     private var _binding: FragmentDetailAnalysisBinding? = null
@@ -43,67 +40,26 @@ class DetailAnalysisFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         val analysisArgs = navArgs.id
+
         getIngridientByIdObserver(analysisArgs)
         setupToolbar()
-        setupShimmer()
-    }
-
-    private fun setupShimmer() {
-        binding?.apply {
-            toolbar.visibility = View.INVISIBLE
-            tvDescription.visibility = View.INVISIBLE
-            tvEnergyAnalysis.visibility = View.INVISIBLE
-            tvEnergyTotal.visibility = View.INVISIBLE
-            tvKarboAnalysis.visibility = View.INVISIBLE
-            tvKarboTotal.visibility = View.INVISIBLE
-            tvAnalisisGizi.visibility = View.INVISIBLE
-            tvLemakAnalysis.visibility = View.INVISIBLE
-            tvLemakTotal.visibility = View.INVISIBLE
-            tvProteinAnalysis.visibility = View.INVISIBLE
-            tvProteinTotal.visibility = View.INVISIBLE
-            tvNameIngridient.visibility = View.INVISIBLE
-            tvWeightIngridient.visibility = View.INVISIBLE
-            ivIngridient.visibility = View.INVISIBLE
-            cardView.visibility = View.INVISIBLE
-
-            Handler(Looper.getMainLooper()).postDelayed({
-                toolbar.visibility = View.VISIBLE
-                tvDescription.visibility = View.VISIBLE
-                tvEnergyAnalysis.visibility = View.VISIBLE
-                tvEnergyTotal.visibility = View.VISIBLE
-                tvKarboAnalysis.visibility = View.VISIBLE
-                tvKarboTotal.visibility = View.VISIBLE
-                tvAnalisisGizi.visibility = View.VISIBLE
-                tvLemakAnalysis.visibility = View.VISIBLE
-                tvLemakTotal.visibility = View.VISIBLE
-                tvProteinAnalysis.visibility = View.VISIBLE
-                tvProteinTotal.visibility = View.VISIBLE
-                tvNameIngridient.visibility = View.VISIBLE
-                tvWeightIngridient.visibility = View.VISIBLE
-                ivIngridient.visibility = View.VISIBLE
-                cardView.visibility = View.VISIBLE
-
-                shimmer.apply {
-                    stopShimmer()
-                    visibility = View.INVISIBLE
-                }
-            }, 1500)
-        }
     }
 
     private fun getIngridientByIdObserver(id: Int) {
         viewModel.getIngridientById(id).observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Result.Error -> {
+                    onResult()
                     Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
                 }
 
                 is Result.Loading -> {
+                    onLoading()
                 }
 
                 is Result.Success -> {
+                    onResult()
                     setupView(result.data)
                 }
             }
@@ -120,14 +76,18 @@ class DetailAnalysisFragment : Fragment() {
                 analysis.gizi?.lemak ?: 0
             )
             tvProteinTotal.text =
-                getString(com.development.gocipes.core.R.string.gram,
-                    analysis.gizi?.protein ?: 0)
+                getString(
+                    com.development.gocipes.core.R.string.gram,
+                    analysis.gizi?.protein ?: 0
+                )
             tvLemakTotal.text =
-                getString(com.development.gocipes.core.R.string.gram,
+                getString(
+                    com.development.gocipes.core.R.string.gram,
                     analysis.gizi?.lemak ?: 0
                 )
             tvKarboTotal.text =
-                getString(com.development.gocipes.core.R.string.gram,
+                getString(
+                    com.development.gocipes.core.R.string.gram,
                     analysis.gizi?.karbohidrat ?: 0
                 )
         }
@@ -151,6 +111,51 @@ class DetailAnalysisFragment : Fragment() {
                 return true
             }
         }, viewLifecycleOwner, Lifecycle.State.CREATED)
+    }
+
+    private fun onLoading() {
+        binding?.apply {
+            toolbar.visibility = View.INVISIBLE
+            tvDescription.visibility = View.INVISIBLE
+            tvEnergyAnalysis.visibility = View.INVISIBLE
+            tvEnergyTotal.visibility = View.INVISIBLE
+            tvKarboAnalysis.visibility = View.INVISIBLE
+            tvKarboTotal.visibility = View.INVISIBLE
+            tvAnalisisGizi.visibility = View.INVISIBLE
+            tvLemakAnalysis.visibility = View.INVISIBLE
+            tvLemakTotal.visibility = View.INVISIBLE
+            tvProteinAnalysis.visibility = View.INVISIBLE
+            tvProteinTotal.visibility = View.INVISIBLE
+            tvNameIngridient.visibility = View.INVISIBLE
+            tvWeightIngridient.visibility = View.INVISIBLE
+            ivIngridient.visibility = View.INVISIBLE
+            cardView.visibility = View.INVISIBLE
+        }
+    }
+
+    private fun onResult() {
+        binding?.apply {
+            toolbar.visibility = View.VISIBLE
+            tvDescription.visibility = View.VISIBLE
+            tvEnergyAnalysis.visibility = View.VISIBLE
+            tvEnergyTotal.visibility = View.VISIBLE
+            tvKarboAnalysis.visibility = View.VISIBLE
+            tvKarboTotal.visibility = View.VISIBLE
+            tvAnalisisGizi.visibility = View.VISIBLE
+            tvLemakAnalysis.visibility = View.VISIBLE
+            tvLemakTotal.visibility = View.VISIBLE
+            tvProteinAnalysis.visibility = View.VISIBLE
+            tvProteinTotal.visibility = View.VISIBLE
+            tvNameIngridient.visibility = View.VISIBLE
+            tvWeightIngridient.visibility = View.VISIBLE
+            ivIngridient.visibility = View.VISIBLE
+            cardView.visibility = View.VISIBLE
+
+            shimmer.apply {
+                stopShimmer()
+                visibility = View.INVISIBLE
+            }
+        }
     }
 
     override fun onDestroy() {
