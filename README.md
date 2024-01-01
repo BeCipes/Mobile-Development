@@ -38,7 +38,7 @@ To build and run the project locally, follow these steps:
 1. Clone the repository: `git clone https://github.com/BeCipes/Mobile-Development.git`
 2. Open the project in Android Studio.
 3. Ensure that the required SDK versions and dependencies are installed.
-5. Add `BASE_URL=YOUR BASE URL FROM RUN BeCipes-Rest API` to `local.properties` file.
+5. Add `BASE_URL=https://backend-development-becipes.fly.dev/api/` to `local.properties` file.
 6. Build and run the app on an emulator or physical device.
 
 Feel free to explore the codebase and make any contributions or improvements as needed. We appreciate your contributions to BeCipes!
