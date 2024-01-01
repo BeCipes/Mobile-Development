@@ -3,7 +3,6 @@ package com.development.gocipes.core.data.repository
 import com.development.gocipes.core.data.local.LocalDataSource
 import com.development.gocipes.core.data.remote.RemoteDataSource
 import com.development.gocipes.core.data.remote.response.analysis.IngridientItem
-import com.development.gocipes.core.data.remote.response.detail.DetailIngridientItems
 import com.development.gocipes.core.domain.repository.IngridientRepository
 import com.development.gocipes.core.utils.Result
 import com.development.gocipes.core.utils.TokenHelper
@@ -33,7 +32,7 @@ class IngridientRepositoryImpl @Inject constructor(
         }
     }.flowOn(Dispatchers.IO)
 
-    override fun getIngridientById(id: Int): Flow<Result<DetailIngridientItems>> = flow{
+    override fun getIngridientById(id: Int): Flow<Result<IngridientItem>> = flow{
         emit(Result.Loading())
         try {
             val token = TokenHelper.generateToken(local.getToken())

@@ -20,7 +20,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.development.gocipes.core.domain.model.article.Article
-import com.development.gocipes.core.domain.model.information.Information
 import com.development.gocipes.core.presentation.adapter.ArticleGridAdapter
 import com.development.gocipes.core.utils.Result
 import com.development.gocipes.databinding.FragmentArticleBinding
@@ -47,7 +46,6 @@ class ArticleFragment : Fragment() {
 
         setupToolbar()
         articleObserver()
-        setupShimmer()
     }
 
     private fun setupShimmer() {
@@ -108,7 +106,9 @@ class ArticleFragment : Fragment() {
     }
 
     private fun setupView(article: List<Article>) {
-        articleGridAdapter = ArticleGridAdapter {}
+        articleGridAdapter = ArticleGridAdapter { id ->
+            navigateToArticleGraph(id)
+        }
 
         val gridCount =
             if (requireActivity().resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) 2 else 4
@@ -139,8 +139,8 @@ class ArticleFragment : Fragment() {
         }
     }
 
-    private fun navigateToArticleGraph(information: Information) {
-        val action = ArticleFragmentDirections.actionArticleFragmentToArticleGraph(information)
+    private fun navigateToArticleGraph(id: Int) {
+        val action = ArticleFragmentDirections.actionArticleFragmentToArticleGraph(id)
         findNavController().navigate(action)
     }
 

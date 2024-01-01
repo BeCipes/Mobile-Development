@@ -9,7 +9,7 @@ import com.development.gocipes.core.domain.model.article.Article
 import com.development.gocipes.core.presentation.adapter.ArticleAdapter.Companion.DIFF_CALLBACK
 import com.development.gocipes.core.utils.Extensions.showImage
 
-class ArticleGridAdapter(val data: (Article) -> Unit) :
+class ArticleGridAdapter(val id: (Int) -> Unit) :
     ListAdapter<Article, ArticleGridAdapter.InformationGridViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InformationGridViewHolder {
@@ -29,7 +29,7 @@ class ArticleGridAdapter(val data: (Article) -> Unit) :
                 sivGuide.showImage(itemView.context, article.cover ?: "")
                 tvName.text = article.headline
             }
-            itemView.setOnClickListener { data.invoke(article) }
+            itemView.setOnClickListener { id.invoke(article.id ?: 0) }
         }
     }
 }

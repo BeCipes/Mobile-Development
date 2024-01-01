@@ -63,5 +63,10 @@ dependencies {
     implementation(Dependencies.navigationKtx)
     implementation(Dependencies.navigationUiKtx)
 
+    //shimmer
     implementation(Dependencies.shimmer)
+
+    //lifecycle
+    implementation(Dependencies.viewModel)
+    implementation(Dependencies.liveData)
 }

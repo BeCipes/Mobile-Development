@@ -1,9 +1,9 @@
 package com.development.gocipes.core.data.remote.response.detail
 
-import com.development.gocipes.core.data.remote.response.analysis.IngridientItem
+import com.development.gocipes.core.data.remote.response.article.ArticleItem
 import com.google.gson.annotations.SerializedName
 
-data class DetailIngridientResponse(
+data class DetailArticleResponse(
 
 	@field:SerializedName("msg")
 	val msg: String? = null,
@@ -12,8 +12,8 @@ data class DetailIngridientResponse(
 	val code: Int? = null,
 
 	@field:SerializedName("data")
-	val data: IngridientItem? = null,
+	val data: ArticleItem? = null,
 
 	@field:SerializedName("status")
-	val status: String? = null,
+	val status: String? = null
 )

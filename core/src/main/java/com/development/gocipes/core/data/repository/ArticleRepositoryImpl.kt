@@ -17,7 +17,7 @@ import javax.inject.Singleton
 @Singleton
 class ArticleRepositoryImpl @Inject constructor(
     private val remoteDataSource: RemoteDataSource,
-    private val local: LocalDataSource
+    private val local: LocalDataSource,
 ) : ArticleRepository {
     override fun getAllArticle(): Flow<Result<List<Article>>> = flow {
         emit(Result.Loading())
@@ -28,6 +28,19 @@ class ArticleRepositoryImpl @Inject constructor(
             emit(Result.Success(result))
         } catch (e: Exception) {
             emit(Result.Error(e.message))
+        }
+    }.flowOn(Dispatchers.IO)
+
+    override fun getArticleById(id: Int): Flow<Result<Article>> = flow {
+        emit(Result.Loading())
+        val token = TokenHelper.generateToken(local.getToken())
+        val response = remoteDataSource.getArticleById(token, id)
+        try {
+            val result = response.data?.toDomain()
+            if (result != null)
+                emit(Result.Success(result))
+        } catch (e: Exception) {
+            emit(Result.Error(response.msg))
         }
     }.flowOn(Dispatchers.IO)
 }

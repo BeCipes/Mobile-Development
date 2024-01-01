@@ -18,7 +18,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.development.gocipes.core.data.remote.response.detail.DetailIngridientItems
+import com.development.gocipes.core.data.remote.response.analysis.IngridientItem
 import com.development.gocipes.core.utils.Extensions.showImage
 import com.development.gocipes.core.utils.Result
 import com.development.gocipes.databinding.FragmentDetailAnalysisBinding
@@ -110,7 +110,7 @@ class DetailAnalysisFragment : Fragment() {
         }
     }
 
-    private fun setupView(analysis: DetailIngridientItems) {
+    private fun setupView(analysis: IngridientItem) {
         binding?.apply {
             ivIngridient.showImage(requireActivity(), analysis.gambar ?: "")
             tvNameIngridient.text = analysis.namaBahan

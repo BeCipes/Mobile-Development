@@ -18,7 +18,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.development.gocipes.core.data.remote.response.detail.DetailCategoryItem
+import com.development.gocipes.core.data.remote.response.category.CategoryItem
 import com.development.gocipes.core.data.remote.response.food.FoodItem
 import com.development.gocipes.core.domain.model.food.Food
 import com.development.gocipes.core.presentation.adapter.IngredientAdapter
@@ -74,7 +74,7 @@ class DetailFoodFragment : Fragment() {
         }
     }
 
-    private fun setupView(categoryItem: DetailCategoryItem) {
+    private fun setupView(categoryItem: CategoryItem) {
         val food = categoryItem.resep
         val fat = food?.informasiGizi?.lemak ?: 0
         val carbohydrate = food?.informasiGizi?.karbohidrat ?: 0

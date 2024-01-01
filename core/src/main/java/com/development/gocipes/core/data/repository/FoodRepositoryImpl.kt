@@ -3,7 +3,6 @@ package com.development.gocipes.core.data.repository
 import com.development.gocipes.core.data.local.LocalDataSource
 import com.development.gocipes.core.data.remote.RemoteDataSource
 import com.development.gocipes.core.data.remote.response.category.CategoryItem
-import com.development.gocipes.core.data.remote.response.detail.DetailCategoryItem
 import com.development.gocipes.core.data.remote.response.food.FoodItem
 import com.development.gocipes.core.domain.repository.FoodRepository
 import com.development.gocipes.core.utils.Result
@@ -50,7 +49,7 @@ class FoodRepositoryImpl @Inject constructor(
         }
     }.flowOn(Dispatchers.IO)
 
-    override fun getFoodById(id: Int): Flow<Result<DetailCategoryItem>> = flow {
+    override fun getFoodById(id: Int): Flow<Result<CategoryItem>> = flow {
         emit(Result.Loading())
         try {
             val token = TokenHelper.generateToken(local.getToken())

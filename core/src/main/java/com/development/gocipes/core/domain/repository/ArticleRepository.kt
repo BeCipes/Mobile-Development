@@ -7,4 +7,6 @@ import kotlinx.coroutines.flow.Flow
 interface ArticleRepository {
 
     fun getAllArticle(): Flow<Result<List<Article>>>
+
+    fun getArticleById(id: Int): Flow<Result<Article>>
 }

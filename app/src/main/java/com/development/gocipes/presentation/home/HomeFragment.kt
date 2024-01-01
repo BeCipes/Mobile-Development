@@ -39,7 +39,6 @@ class HomeFragment : Fragment() {
     private val viewModel by viewModels<HomeViewModel>()
     private val techniqueViewModel by viewModels<TechniqueViewModel>()
     private val articleViewModel by viewModels<ArticleViewModel>()
-    private val foodViewModel by viewModels<FoodViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -190,7 +189,9 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupRecyclerViewArticle(listArticle: List<Article>) {
-        articleAdapter = ArticleAdapter()
+        articleAdapter = ArticleAdapter{ id ->
+            navigateToArticleGraph(id)
+        }
 
         binding?.contentHome?.rvGuide?.apply {
             adapter = articleAdapter
@@ -246,9 +247,9 @@ class HomeFragment : Fragment() {
         findNavController().navigate(action)
     }
 
-    private fun navigateToArticleGraph(information: Information) {
+    private fun navigateToArticleGraph(id: Int) {
         val action =
-            HomeFragmentDirections.actionHomeFragmentToArticleGraph(information)
+            HomeFragmentDirections.actionHomeFragmentToArticleGraph(id)
         findNavController().navigate(action)
     }
 
