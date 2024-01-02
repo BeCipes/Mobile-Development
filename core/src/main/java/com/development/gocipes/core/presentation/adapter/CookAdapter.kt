@@ -6,11 +6,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.development.gocipes.core.R
+import com.development.gocipes.core.data.remote.response.step.StepItem
 import com.development.gocipes.core.databinding.ItemCookBinding
-import com.development.gocipes.core.domain.model.food.Cook
 import com.development.gocipes.core.utils.Extensions.showImage
 
-class CookAdapter : ListAdapter<Cook, CookAdapter.CookViewHolder>(DIFF_CALLBACK) {
+class CookAdapter : ListAdapter<StepItem, CookAdapter.CookViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CookViewHolder {
         val binding = ItemCookBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -23,21 +23,23 @@ class CookAdapter : ListAdapter<Cook, CookAdapter.CookViewHolder>(DIFF_CALLBACK)
 
     inner class CookViewHolder(private val binding: ItemCookBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(cook: Cook) {
+        fun bind(step: StepItem) {
             binding.apply {
-                sivCook.showImage(itemView.context, cook.imageUrl)
-                tvStep.text = itemView.context.getString(R.string.by_step, cook.id.toString())
-                tvDescription.text = cook.description
+                sivCook.showImage(itemView.context, step.gambar ?: "")
+                tvStep.text = itemView.context.getString(R.string.by_step, step.stepNo.toString())
+                tvDescription.text = step.stepDesc
             }
         }
     }
 
     companion object {
         val DIFF_CALLBACK =
-            object : DiffUtil.ItemCallback<Cook>() {
-                override fun areItemsTheSame(oldItem: Cook, newItem: Cook) = oldItem == newItem
+            object : DiffUtil.ItemCallback<StepItem>() {
+                override fun areItemsTheSame(oldItem: StepItem, newItem: StepItem) =
+                    oldItem == newItem
 
-                override fun areContentsTheSame(oldItem: Cook, newItem: Cook) = oldItem == newItem
+                override fun areContentsTheSame(oldItem: StepItem, newItem: StepItem) =
+                    oldItem == newItem
             }
     }
 }

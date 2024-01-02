@@ -37,6 +37,7 @@ class HomeFragment : Fragment() {
     private lateinit var articleAdapter: ArticleAdapter
     private lateinit var recipeAdapter: RecipeAdapter
     private val viewModel by viewModels<HomeViewModel>()
+    private val foodViewModel by viewModels<FoodViewModel>()
     private val techniqueViewModel by viewModels<TechniqueViewModel>()
     private val articleViewModel by viewModels<ArticleViewModel>()
 
@@ -59,7 +60,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun categoryObserver() {
-        viewModel.getCategoryFood().observe(viewLifecycleOwner) { result ->
+        foodViewModel.getCategoryFood().observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Result.Error -> {
                     Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
@@ -78,7 +79,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun foodObserver() {
-        viewModel.getCategoryFood().observe(viewLifecycleOwner) { result ->
+        foodViewModel.getCategoryFood().observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Result.Error -> {
                     Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
@@ -189,7 +190,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupRecyclerViewArticle(listArticle: List<Article>) {
-        articleAdapter = ArticleAdapter{ id ->
+        articleAdapter = ArticleAdapter { id ->
             navigateToArticleGraph(id)
         }
 

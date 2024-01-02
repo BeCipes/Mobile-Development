@@ -2,11 +2,11 @@ package com.development.gocipes.core.presentation.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.development.gocipes.core.databinding.ItemSearchBinding
 import com.development.gocipes.core.domain.model.food.Food
-import com.development.gocipes.core.presentation.adapter.FoodAdapter.Companion.DIFF_CALLBACK
 import com.development.gocipes.core.utils.Extensions.showImage
 import java.util.Locale
 
@@ -53,5 +53,17 @@ class SearchAdapter(val data: (Food) -> Unit) : ListAdapter<Food, SearchAdapter.
         }
 
         submitList(list)
+    }
+
+    companion object {
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Food>() {
+            override fun areItemsTheSame(oldItem: Food, newItem: Food): Boolean {
+                return oldItem == newItem
+            }
+
+            override fun areContentsTheSame(oldItem: Food, newItem: Food): Boolean {
+                return oldItem == newItem
+            }
+        }
     }
 }

@@ -2,8 +2,6 @@ package com.development.gocipes.presentation.home.food.timer
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -11,30 +9,36 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.viewpager.widget.ViewPager
 import com.development.gocipes.core.R
-import com.development.gocipes.core.domain.model.food.Cook
-import com.development.gocipes.core.domain.model.food.Food
+import com.development.gocipes.core.data.remote.response.step.StepItem
 import com.development.gocipes.core.presentation.adapter.TimerAdapter
+import com.development.gocipes.core.utils.Result
 import com.development.gocipes.databinding.FragmentTimerBinding
+import com.development.gocipes.presentation.home.food.FoodViewModel
 import com.orbitalsonic.sonictimer.SonicCountDownTimer
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.DecimalFormat
 import kotlin.math.roundToInt
 
+@AndroidEntryPoint
 class TimerFragment : Fragment() {
 
     private var _binding: FragmentTimerBinding? = null
     private val binding get() = _binding
     private lateinit var countDownTimer: SonicCountDownTimer
     private lateinit var timerAdapter: TimerAdapter
+    private val viewModel by viewModels<FoodViewModel>()
     private val navArgs by navArgs<TimerFragmentArgs>()
 
     override fun onCreateView(
@@ -48,54 +52,44 @@ class TimerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupView()
-        setupShimmer()
+        stepObserver()
     }
 
-    private fun setupShimmer() {
-        binding?.apply {
-            viewPager.visibility = View.INVISIBLE
-            toolbar.visibility = View.INVISIBLE
-            progressCircular.visibility = View.INVISIBLE
-            btnPrevious.visibility = View.INVISIBLE
-            btnPause.visibility = View.INVISIBLE
-            btnNext.visibility = View.INVISIBLE
-            tvTimer.visibility = View.INVISIBLE
-
-            Handler(Looper.getMainLooper()).postDelayed({
-                viewPager.visibility = View.VISIBLE
-                toolbar.visibility = View.VISIBLE
-                progressCircular.visibility = View.VISIBLE
-                btnPrevious.visibility = View.VISIBLE
-                btnPause.visibility = View.VISIBLE
-                btnNext.visibility = View.VISIBLE
-                tvTimer.visibility = View.VISIBLE
-
-                shimmer.apply {
-                    stopShimmer()
-                    visibility = View.INVISIBLE
+    private fun stepObserver() {
+        viewModel.getStep(navArgs.id).observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is Result.Error -> {
+                    onResult()
+                    Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
                 }
-            }, 1000)
+
+                is Result.Loading -> {
+                    onLoading()
+                }
+
+                is Result.Success -> {
+                    onResult()
+                    setupView(result.data)
+                }
+            }
         }
     }
 
-    private fun setupView() {
-        val foodArgs = navArgs.food
-        val step = foodArgs.step
+    private fun setupView(listStep: List<StepItem>) {
 
         binding?.apply {
             btnNext.setOnClickListener { next() }
             btnPrevious.setOnClickListener { previous() }
         }
 
-        setupTimer(foodArgs.step[0].minutes, foodArgs)
-        setupToolbar(foodArgs.step[0].id)
-        setupViewPager(step)
-        pageChange(foodArgs)
+        setupTimer(listStep[0].waktu ?: 0, listStep[0].id ?: 0)
+        setupToolbar(listStep[0].stepNo ?: 0)
+        setupViewPager(listStep)
+        pageChange(listStep)
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private fun setupViewPager(steps: List<Cook>) {
+    private fun setupViewPager(steps: List<StepItem>) {
         timerAdapter = TimerAdapter(requireActivity(), steps)
 
         binding?.viewPager?.apply {
@@ -125,7 +119,7 @@ class TimerFragment : Fragment() {
         }, viewLifecycleOwner, Lifecycle.State.CREATED)
     }
 
-    private fun pageChange(food: Food) {
+    private fun pageChange(listStep: List<StepItem>) {
         binding?.viewPager?.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrolled(
                 position: Int,
@@ -135,15 +129,15 @@ class TimerFragment : Fragment() {
             }
 
             override fun onPageSelected(position: Int) {
-                setupTimer(food.step[position].minutes, food)
-                setupToolbar(food.step[position].id)
+                setupTimer(listStep[position].waktu ?: 0, listStep[position].idResep ?: 0)
+                setupToolbar(listStep[position].stepNo ?: 0)
             }
 
             override fun onPageScrollStateChanged(state: Int) {}
         })
     }
 
-    private fun setupTimer(timer: Int, food: Food) {
+    private fun setupTimer(timer: Int, idRecipe: Int) {
         val clockTime = (timer * 1000).toLong()
         val progressTime = (clockTime / 1000).toFloat()
         val second = (clockTime / 1000.0f).roundToInt()
@@ -165,7 +159,7 @@ class TimerFragment : Fragment() {
                     binding?.apply {
                         if (viewPager.currentItem == viewPager.adapter?.count?.minus(1)) {
                             val action =
-                                TimerFragmentDirections.actionTimerFragmentToFinishFragment(food)
+                                TimerFragmentDirections.actionTimerFragmentToFinishFragment(idRecipe)
                             findNavController().navigate(action)
                         } else {
                             viewPager.setCurrentItem(viewPager.currentItem + 1, true)
@@ -235,6 +229,35 @@ class TimerFragment : Fragment() {
     private fun next() {
         binding?.apply {
             viewPager.setCurrentItem(viewPager.currentItem + 1, true)
+        }
+    }
+
+    private fun onLoading() {
+        binding?.apply {
+            viewPager.visibility = View.INVISIBLE
+            toolbar.visibility = View.INVISIBLE
+            progressCircular.visibility = View.INVISIBLE
+            btnPrevious.visibility = View.INVISIBLE
+            btnPause.visibility = View.INVISIBLE
+            btnNext.visibility = View.INVISIBLE
+            tvTimer.visibility = View.INVISIBLE
+        }
+    }
+
+    private fun onResult() {
+        binding?.apply {
+            viewPager.visibility = View.VISIBLE
+            toolbar.visibility = View.VISIBLE
+            progressCircular.visibility = View.VISIBLE
+            btnPrevious.visibility = View.VISIBLE
+            btnPause.visibility = View.VISIBLE
+            btnNext.visibility = View.VISIBLE
+            tvTimer.visibility = View.VISIBLE
+
+            shimmer.apply {
+                stopShimmer()
+                visibility = View.INVISIBLE
+            }
         }
     }
 

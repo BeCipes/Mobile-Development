@@ -1,37 +1,41 @@
 package com.development.gocipes.presentation.home.food.cook
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.development.gocipes.core.domain.model.food.Cook
-import com.development.gocipes.core.domain.model.food.Food
+import com.development.gocipes.core.data.remote.response.step.StepItem
 import com.development.gocipes.core.presentation.adapter.CookAdapter
+import com.development.gocipes.core.utils.Result
 import com.development.gocipes.databinding.FragmentCookBinding
+import com.development.gocipes.presentation.home.food.FoodViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class CookFragment : Fragment() {
 
     private var _binding: FragmentCookBinding? = null
     private val binding get() = _binding
     private val navArgs by navArgs<CookFragmentArgs>()
+    private val viewModel by viewModels<FoodViewModel>()
     private lateinit var cookAdapter: CookAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         _binding = FragmentCookBinding.inflate(layoutInflater, container, false)
         return binding?.root
@@ -40,35 +44,34 @@ class CookFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val foodArgs = navArgs.food
-
-        setupView(foodArgs)
-        setupShimmer()
+        stepObserver()
     }
 
-    private fun setupShimmer() {
-        binding?.apply {
-            rvCook.visibility = View.INVISIBLE
-            toolbar.visibility = View.INVISIBLE
-            btnCook.visibility = View.INVISIBLE
-
-            Handler(Looper.getMainLooper()).postDelayed({
-                rvCook.visibility = View.VISIBLE
-                toolbar.visibility = View.VISIBLE
-                btnCook.visibility = View.VISIBLE
-                shimmer.apply {
-                    stopShimmer()
-                    visibility = View.INVISIBLE
+    private fun stepObserver() {
+        viewModel.getStep(navArgs.id).observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is Result.Error -> {
+                    onResult()
+                    Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
                 }
-            }, 1000)
+
+                is Result.Loading -> {
+                    onLoading()
+                }
+
+                is Result.Success -> {
+                    onResult()
+                    setupView(result.data)
+                }
+            }
         }
     }
 
-    private fun setupView(food: Food) {
+    private fun setupView(step: List<StepItem>) {
 
         setupToolbar()
-        setupRecyclerView(food.step)
-        binding?.btnCook?.setOnClickListener { navigateToTimer(food) }
+        setupRecyclerView(step)
+        binding?.btnCook?.setOnClickListener { navigateToTimer(navArgs.id) }
     }
 
     private fun setupToolbar() {
@@ -91,7 +94,7 @@ class CookFragment : Fragment() {
         }, viewLifecycleOwner, Lifecycle.State.CREATED)
     }
 
-    private fun setupRecyclerView(listCook: List<Cook>) {
+    private fun setupRecyclerView(listCook: List<StepItem>) {
         cookAdapter = CookAdapter()
 
         binding?.rvCook?.apply {
@@ -102,12 +105,32 @@ class CookFragment : Fragment() {
         cookAdapter.submitList(listCook)
     }
 
-    private fun navigateToTimer(food: Food) {
+    private fun navigateToTimer(id: Int) {
         val action =
             CookFragmentDirections.actionCookFragmentToTimerFragment(
-                food
+                id
             )
         findNavController().navigate(action)
+    }
+
+    private fun onLoading() {
+        binding?.apply {
+            rvCook.visibility = View.INVISIBLE
+            toolbar.visibility = View.INVISIBLE
+            btnCook.visibility = View.INVISIBLE
+        }
+    }
+
+    private fun onResult() {
+        binding?.apply {
+            rvCook.visibility = View.VISIBLE
+            toolbar.visibility = View.VISIBLE
+            btnCook.visibility = View.VISIBLE
+            shimmer.apply {
+                stopShimmer()
+                visibility = View.INVISIBLE
+            }
+        }
     }
 
     override fun onDestroy() {

@@ -11,5 +11,9 @@ class FoodViewModel @Inject constructor(
     private val foodRepository: FoodRepository
 ) : ViewModel() {
 
-    fun getAllFood() = foodRepository.getALlFood().asLiveData()
+    fun getCategoryFood() = foodRepository.getCategoryFood().asLiveData()
+
+    fun getStep(id: Int) = foodRepository.getStep(id).asLiveData()
+
+    fun getRecipeById(id: Int) = foodRepository.getRecipeById(id).asLiveData()
 }

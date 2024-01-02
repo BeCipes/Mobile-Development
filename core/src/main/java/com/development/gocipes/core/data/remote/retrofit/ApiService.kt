@@ -10,7 +10,9 @@ import com.development.gocipes.core.data.remote.response.category.CategoryRespon
 import com.development.gocipes.core.data.remote.response.detail.DetailArticleResponse
 import com.development.gocipes.core.data.remote.response.detail.DetailCategoryResponse
 import com.development.gocipes.core.data.remote.response.detail.DetailIngridientResponse
+import com.development.gocipes.core.data.remote.response.detail.DetailRecipeResponse
 import com.development.gocipes.core.data.remote.response.food.FoodResponse
+import com.development.gocipes.core.data.remote.response.step.StepResponse
 import com.development.gocipes.core.data.remote.response.technique.TechniqueResponse
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -90,4 +92,16 @@ interface ApiService {
         @Header("Authorization") token: String,
         @Path("id") id: Int
     ): DetailArticleResponse
+
+    @GET("data/step/resep/{id}")
+    suspend fun getStepByRecipeId(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int
+    ): StepResponse
+
+    @GET("data/resep/{id}")
+    suspend fun getRecipeById(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int
+    ): DetailRecipeResponse
 }

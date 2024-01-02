@@ -20,7 +20,6 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.development.gocipes.core.data.remote.response.category.CategoryItem
 import com.development.gocipes.core.data.remote.response.food.FoodItem
-import com.development.gocipes.core.domain.model.food.Food
 import com.development.gocipes.core.presentation.adapter.IngredientAdapter
 import com.development.gocipes.core.utils.Extensions.showImage
 import com.development.gocipes.core.utils.Result
@@ -95,7 +94,7 @@ class DetailFoodFragment : Fragment() {
         }
         setupRecyclerIngredient(food?.bahan ?: emptyList())
         setupToolbar(food)
-        binding?.btnCook?.setOnClickListener { }
+        binding?.btnCook?.setOnClickListener { navigateToCook(food?.id ?: 0) }
     }
 
     private fun setupRecyclerIngredient(listIngredient: List<String>) {
@@ -157,10 +156,10 @@ class DetailFoodFragment : Fragment() {
         }
     }
 
-    private fun navigateToCook(food: Food) {
+    private fun navigateToCook(id: Int) {
         val action =
             DetailFoodFragmentDirections.actionDetailFoodFragmentToCookFragment(
-                food
+                id
             )
         findNavController().navigate(action)
     }

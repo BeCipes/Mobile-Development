@@ -157,36 +157,36 @@
         android:name="com.development.gocipes.presentation.home.food.cook.CookFragment"
         android:label="fragment_cook"
         tools:layout="@layout/fragment_cook" >
-        <argument
-            android:name="food"
-            app:argType="com.development.gocipes.core.domain.model.food.Food" />
         <action
             android:id="@+id/action_cookFragment_to_timerFragment"
             app:destination="@id/timerFragment" />
+        <argument
+            android:name="id"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/timerFragment"
         android:name="com.development.gocipes.presentation.home.food.timer.TimerFragment"
         android:label="fragment_timer"
         tools:layout="@layout/fragment_timer" >
-        <argument
-            android:name="food"
-            app:argType="com.development.gocipes.core.domain.model.food.Food" />
         <action
             android:id="@+id/action_timerFragment_to_finishFragment"
             app:destination="@id/finishFragment" />
+        <argument
+            android:name="id"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/finishFragment"
         android:name="com.development.gocipes.presentation.home.food.finish.FinishFragment"
         android:label="fragment_finish"
         tools:layout="@layout/fragment_finish" >
-        <argument
-            android:name="food"
-            app:argType="com.development.gocipes.core.domain.model.food.Food" />
         <action
             android:id="@+id/action_finishFragment_to_homeFragment2"
             app:destination="@id/homeFragment" />
+        <argument
+            android:name="id"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/chatBotFragment"

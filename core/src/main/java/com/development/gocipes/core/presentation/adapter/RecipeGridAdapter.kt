@@ -4,12 +4,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.development.gocipes.core.data.remote.response.category.CategoryItem
 import com.development.gocipes.core.databinding.ItemFoodGridBinding
-import com.development.gocipes.core.domain.model.food.Food
-import com.development.gocipes.core.presentation.adapter.SearchAdapter.Companion.DIFF_CALLBACK
+import com.development.gocipes.core.presentation.adapter.RecipeAdapter.Companion.DIFF_CALLBACK
 import com.development.gocipes.core.utils.Extensions.showImage
 
-class FoodGridAdapter(val data: (Food) -> Unit) : ListAdapter<Food, FoodGridAdapter.FoodGridViewHolder>(DIFF_CALLBACK) {
+class RecipeGridAdapter(val id: (Int) -> Unit) :
+    ListAdapter<CategoryItem, RecipeGridAdapter.FoodGridViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FoodGridViewHolder {
         val binding =
@@ -23,15 +24,16 @@ class FoodGridAdapter(val data: (Food) -> Unit) : ListAdapter<Food, FoodGridAdap
 
     inner class FoodGridViewHolder(private val binding: ItemFoodGridBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(food: Food) {
+        fun bind(category: CategoryItem) {
+            val food = category.resep
             binding.apply {
-                sivFood.showImage(itemView.context, food.imageUrl)
-                tvName.text = food.name
-                tvMinutes.text = food.minutes
-                tvCategory.text = food.category
+                sivFood.showImage(itemView.context, food?.gambar ?: "")
+                tvName.text = food?.namaResep
+                tvMinutes.text = "${category.resep?.id} menit"
+                tvCategory.text = category.kategori.namaKategori
             }
 
-            itemView.setOnClickListener { data.invoke(food) }
+            itemView.setOnClickListener { id.invoke(category.id ?: 0) }
         }
     }
 }
