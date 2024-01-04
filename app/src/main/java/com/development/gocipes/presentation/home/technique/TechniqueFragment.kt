@@ -18,7 +18,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.development.gocipes.core.domain.model.technique.Technique
-import com.development.gocipes.core.presentation.adapter.InformationGridAdapter
 import com.development.gocipes.core.presentation.adapter.TechniqueGridAdapter
 import com.development.gocipes.core.utils.Result
 import com.development.gocipes.databinding.FragmentTechniqueBinding
@@ -29,7 +28,6 @@ class TechniqueFragment : Fragment() {
 
     private var _binding: FragmentTechniqueBinding? = null
     private val binding get() = _binding
-    private lateinit var informationAdapter: InformationGridAdapter
     private lateinit var techniqueGridAdapter: TechniqueGridAdapter
     private val viewModel by viewModels<TechniqueViewModel>()
 
