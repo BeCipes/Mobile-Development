@@ -69,4 +69,8 @@ dependencies {
 
     //shimmer
     implementation(Dependencies.shimmer)
+
+    //lifecycle
+    implementation(Dependencies.viewModel)
+    implementation(Dependencies.liveData)
 }

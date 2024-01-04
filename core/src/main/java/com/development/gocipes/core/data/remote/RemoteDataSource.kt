@@ -36,4 +36,6 @@ class RemoteDataSource @Inject constructor(
     suspend fun getStepByRecipeId(token: String, id: Int) = apiService.getStepByRecipeId(token, id)
 
     suspend fun getRecipeById(token: String, id: Int) = apiService.getRecipeById(token, id)
+
+    suspend fun getTechniqueById(token: String, id: Int) = apiService.getTechniqueById(token, id)
 }

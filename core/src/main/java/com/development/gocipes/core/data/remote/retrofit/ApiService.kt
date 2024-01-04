@@ -11,6 +11,7 @@ import com.development.gocipes.core.data.remote.response.detail.DetailArticleRes
 import com.development.gocipes.core.data.remote.response.detail.DetailCategoryResponse
 import com.development.gocipes.core.data.remote.response.detail.DetailIngridientResponse
 import com.development.gocipes.core.data.remote.response.detail.DetailRecipeResponse
+import com.development.gocipes.core.data.remote.response.detail.DetailTechniqueResponse
 import com.development.gocipes.core.data.remote.response.food.FoodResponse
 import com.development.gocipes.core.data.remote.response.step.StepResponse
 import com.development.gocipes.core.data.remote.response.technique.TechniqueResponse
@@ -104,4 +105,10 @@ interface ApiService {
         @Header("Authorization") token: String,
         @Path("id") id: Int
     ): DetailRecipeResponse
+
+    @GET("data/teknik/{id}")
+    suspend fun getTechniqueById(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int
+    ): DetailTechniqueResponse
 }

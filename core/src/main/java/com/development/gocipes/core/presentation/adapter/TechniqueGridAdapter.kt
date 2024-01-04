@@ -9,7 +9,7 @@ import com.development.gocipes.core.databinding.ItemInformationGridBinding
 import com.development.gocipes.core.domain.model.technique.Technique
 import com.development.gocipes.core.utils.Extensions.showImage
 
-class TechniqueGridAdapter(val data: (Technique) -> Unit) :
+class TechniqueGridAdapter(val id: (Int) -> Unit) :
     ListAdapter<Technique, TechniqueGridAdapter.InformationGridViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InformationGridViewHolder {
@@ -29,7 +29,7 @@ class TechniqueGridAdapter(val data: (Technique) -> Unit) :
                 sivGuide.showImage(itemView.context, technique.cover ?: "")
                 tvName.text = technique.title
             }
-            itemView.setOnClickListener { data.invoke(technique) }
+            itemView.setOnClickListener { id.invoke(technique.id ?: 0) }
         }
     }
 

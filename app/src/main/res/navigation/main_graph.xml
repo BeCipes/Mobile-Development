@@ -36,8 +36,8 @@
             android:id="@+id/action_homeFragment_to_technique_graph"
             app:destination="@id/technique_graph">
             <argument
-                android:name="information"
-                app:argType="com.development.gocipes.core.domain.model.information.Information" />
+                android:name="id"
+                app:argType="integer" />
         </action>
         <action
             android:id="@+id/action_homeFragment_to_detailFoodFragment"
@@ -103,8 +103,8 @@
             android:id="@+id/action_techniqueFragment_to_technique_graph"
             app:destination="@id/technique_graph">
             <argument
-                android:name="information"
-                app:argType="com.development.gocipes.core.domain.model.information.Information" />
+                android:name="id"
+                app:argType="integer" />
         </action>
     </fragment>
     <fragment

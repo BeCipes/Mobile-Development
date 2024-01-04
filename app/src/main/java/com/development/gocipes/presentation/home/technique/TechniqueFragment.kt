@@ -2,8 +2,6 @@ package com.development.gocipes.presentation.home.technique
 
 import android.content.res.Configuration
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -19,9 +17,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.development.gocipes.core.data.local.dummy.DummyInformation
-import com.development.gocipes.core.domain.model.information.Information
+import com.development.gocipes.core.domain.model.technique.Technique
 import com.development.gocipes.core.presentation.adapter.InformationGridAdapter
+import com.development.gocipes.core.presentation.adapter.TechniqueGridAdapter
 import com.development.gocipes.core.utils.Result
 import com.development.gocipes.databinding.FragmentTechniqueBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,6 +30,7 @@ class TechniqueFragment : Fragment() {
     private var _binding: FragmentTechniqueBinding? = null
     private val binding get() = _binding
     private lateinit var informationAdapter: InformationGridAdapter
+    private lateinit var techniqueGridAdapter: TechniqueGridAdapter
     private val viewModel by viewModels<TechniqueViewModel>()
 
     override fun onCreateView(
@@ -46,40 +45,24 @@ class TechniqueFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupToolbar()
-        setupView()
-        setupShimmer()
-    }
-
-    private fun setupShimmer() {
-        binding?.apply {
-            rvArticle.visibility = View.INVISIBLE
-            toolbar.visibility = View.INVISIBLE
-
-            Handler(Looper.getMainLooper()).postDelayed({
-                rvArticle.visibility = View.VISIBLE
-                toolbar.visibility = View.VISIBLE
-
-                shimmer.apply {
-                    stopShimmer()
-                    visibility = View.INVISIBLE
-                }
-            }, 1500)
-        }
+        techniqueObserver()
     }
 
     private fun techniqueObserver() {
         viewModel.getAllTechnique().observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Result.Error -> {
+                    onResult()
                     Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
                 }
 
                 is Result.Loading -> {
-
+                    onLoading()
                 }
 
                 is Result.Success -> {
-                    result.data
+                    onResult()
+                    setupView(result.data)
                 }
             }
         }
@@ -105,28 +88,46 @@ class TechniqueFragment : Fragment() {
         }, viewLifecycleOwner, Lifecycle.State.CREATED)
     }
 
-    private fun setupView() {
-        val data = DummyInformation.dummyTechnique
-        informationAdapter = InformationGridAdapter { technique ->
-            navigateToTechniqueGraph(technique)
+    private fun setupView(listTechnique: List<Technique>) {
+        techniqueGridAdapter = TechniqueGridAdapter { id ->
+            navigateToTechniqueGraph(id)
         }
         val gridCount =
             if (requireActivity().resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) 2 else 4
 
         binding?.apply {
             rvArticle.apply {
-                adapter = informationAdapter
+                adapter = techniqueGridAdapter
                 layoutManager = GridLayoutManager(requireActivity(), gridCount)
             }
         }
 
-        informationAdapter.submitList(data)
+        techniqueGridAdapter.submitList(listTechnique)
     }
 
-    private fun navigateToTechniqueGraph(information: Information) {
+    private fun navigateToTechniqueGraph(id: Int) {
         val action =
-            TechniqueFragmentDirections.actionTechniqueFragmentToTechniqueGraph(information)
+            TechniqueFragmentDirections.actionTechniqueFragmentToTechniqueGraph(id)
         findNavController().navigate(action)
+    }
+
+    private fun onLoading() {
+        binding?.apply {
+            rvArticle.visibility = View.INVISIBLE
+            toolbar.visibility = View.INVISIBLE
+        }
+    }
+
+    private fun onResult() {
+        binding?.apply {
+            rvArticle.visibility = View.VISIBLE
+            toolbar.visibility = View.VISIBLE
+
+            shimmer.apply {
+                stopShimmer()
+                visibility = View.INVISIBLE
+            }
+        }
     }
 
     override fun onDestroy() {

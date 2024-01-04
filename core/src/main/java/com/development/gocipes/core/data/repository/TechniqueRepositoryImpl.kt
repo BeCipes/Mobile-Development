@@ -17,7 +17,7 @@ import javax.inject.Singleton
 @Singleton
 class TechniqueRepositoryImpl @Inject constructor(
     private val remoteDataSource: RemoteDataSource,
-    private val local: LocalDataSource
+    private val local: LocalDataSource,
 ) : TechniqueRepository {
     override fun getAllTechnique(): Flow<Result<List<Technique>>> = flow {
         emit(Result.Loading())
@@ -26,6 +26,18 @@ class TechniqueRepositoryImpl @Inject constructor(
             val response = remoteDataSource.getAllTechnique(token)
             val result = response.data.map { it.toDomain() }
             emit(Result.Success(result))
+        } catch (e: Exception) {
+            emit(Result.Error(e.message))
+        }
+    }.flowOn(Dispatchers.IO)
+
+    override fun getTechniqueById(id: Int): Flow<Result<Technique>> = flow {
+        emit(Result.Loading())
+        try {
+            val token = TokenHelper.generateToken(local.getToken())
+            val response = remoteDataSource.getTechniqueById(token, id)
+            val result = response.data?.toDomain()
+            if (result != null) emit(Result.Success(result))
         } catch (e: Exception) {
             emit(Result.Error(e.message))
         }

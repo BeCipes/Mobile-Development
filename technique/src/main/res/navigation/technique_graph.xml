@@ -9,7 +9,7 @@
         android:name="com.development.gocipes.technique.presentation.DetailTechniqueFragment"
         android:label="DetailTechniqueFragment" >
         <argument
-            android:name="information"
-            app:argType="com.development.gocipes.core.domain.model.information.Information" />
+            android:name="id"
+            app:argType="integer" />
     </fragment>
 </navigation>

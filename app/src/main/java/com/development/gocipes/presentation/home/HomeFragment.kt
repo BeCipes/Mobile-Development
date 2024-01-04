@@ -13,7 +13,6 @@ import com.development.gocipes.core.data.remote.response.auth.UserResult
 import com.development.gocipes.core.data.remote.response.category.Category
 import com.development.gocipes.core.data.remote.response.category.CategoryItem
 import com.development.gocipes.core.domain.model.article.Article
-import com.development.gocipes.core.domain.model.information.Information
 import com.development.gocipes.core.domain.model.technique.Technique
 import com.development.gocipes.core.presentation.adapter.ArticleAdapter
 import com.development.gocipes.core.presentation.adapter.CategoryAdapter
@@ -204,7 +203,9 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupRecyclerViewTechnique(listTechnique: List<Technique>) {
-        techniqueAdapter = TechniqueAdapter()
+        techniqueAdapter = TechniqueAdapter { id ->
+            navigateToTechniqueGraph(id)
+        }
 
         binding?.contentHome?.rvTechnique?.apply {
             adapter = techniqueAdapter
@@ -260,9 +261,9 @@ class HomeFragment : Fragment() {
         findNavController().navigate(action)
     }
 
-    private fun navigateToTechniqueGraph(information: Information) {
+    private fun navigateToTechniqueGraph(id: Int) {
         val action =
-            HomeFragmentDirections.actionHomeFragmentToTechniqueGraph(information)
+            HomeFragmentDirections.actionHomeFragmentToTechniqueGraph(id)
         findNavController().navigate(action)
     }
 

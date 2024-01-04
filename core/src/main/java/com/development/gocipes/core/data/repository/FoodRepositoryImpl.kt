@@ -37,14 +37,14 @@ class FoodRepositoryImpl @Inject constructor(
 
     override fun getCategoryFood(): Flow<Result<List<CategoryItem>>> = flow {
         emit(Result.Loading())
-        val token = TokenHelper.generateToken(local.getToken())
-        val response = remoteDataSource.getCategoryFood(token)
         try {
+            val token = TokenHelper.generateToken(local.getToken())
+            val response = remoteDataSource.getCategoryFood(token)
             val result = response.data
             if (result != null)
                 emit(Result.Success(result))
         } catch (e: HttpException) {
-            emit(Result.Error(response.msg))
+            emit(Result.Error(e.message()))
         } catch (e: IOException) {
             emit(Result.Error(e.message))
         }

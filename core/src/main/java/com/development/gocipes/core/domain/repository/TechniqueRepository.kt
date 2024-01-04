@@ -7,4 +7,6 @@ import kotlinx.coroutines.flow.Flow
 interface TechniqueRepository {
 
     fun getAllTechnique(): Flow<Result<List<Technique>>>
+
+    fun getTechniqueById(id: Int): Flow<Result<Technique>>
 }

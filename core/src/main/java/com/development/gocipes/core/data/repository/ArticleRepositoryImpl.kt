@@ -33,14 +33,14 @@ class ArticleRepositoryImpl @Inject constructor(
 
     override fun getArticleById(id: Int): Flow<Result<Article>> = flow {
         emit(Result.Loading())
-        val token = TokenHelper.generateToken(local.getToken())
-        val response = remoteDataSource.getArticleById(token, id)
         try {
+            val token = TokenHelper.generateToken(local.getToken())
+            val response = remoteDataSource.getArticleById(token, id)
             val result = response.data?.toDomain()
             if (result != null)
                 emit(Result.Success(result))
         } catch (e: Exception) {
-            emit(Result.Error(response.msg))
+            emit(Result.Error(e.message))
         }
     }.flowOn(Dispatchers.IO)
 }

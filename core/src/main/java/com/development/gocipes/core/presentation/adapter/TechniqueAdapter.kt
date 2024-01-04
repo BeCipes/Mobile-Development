@@ -9,7 +9,7 @@ import com.development.gocipes.core.domain.model.technique.Technique
 import com.development.gocipes.core.presentation.adapter.TechniqueGridAdapter.Companion.DIFF_CALLBACK
 import com.development.gocipes.core.utils.Extensions.showImage
 
-class TechniqueAdapter() :
+class TechniqueAdapter(val id: (Int) -> Unit) :
     ListAdapter<Technique, TechniqueAdapter.GuideViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GuideViewHolder {
@@ -28,6 +28,8 @@ class TechniqueAdapter() :
                 sivGuide.showImage(itemView.context, technique.cover ?: "")
                 tvName.text = technique.title
             }
+
+            itemView.setOnClickListener { id.invoke(technique.id ?: 0) }
         }
 
     }
