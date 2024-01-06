@@ -19,6 +19,9 @@ data class GetUserResponse(
 
 data class UserResult(
 
+	@field:SerializedName("id")
+	val id: String,
+
 	@field:SerializedName("role")
 	val role: String,
 
@@ -29,7 +32,7 @@ data class UserResult(
 	val lastName: String,
 
 	@field:SerializedName("photo")
-	val photo: String?= null ,
+	val photo: String?= null,
 
 	@field:SerializedName("first_name")
 	val firstName: String,

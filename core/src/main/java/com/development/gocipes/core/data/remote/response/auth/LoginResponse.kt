@@ -19,6 +19,9 @@ data class LoginResponse(
 
 data class LoginItem(
 
+	@field:SerializedName("id")
+	val id: String? = null,
+
 	@field:SerializedName("role")
 	val role: String? = null,
 

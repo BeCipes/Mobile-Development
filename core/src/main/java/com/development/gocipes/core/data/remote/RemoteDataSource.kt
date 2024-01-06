@@ -38,4 +38,6 @@ class RemoteDataSource @Inject constructor(
     suspend fun getRecipeById(token: String, id: Int) = apiService.getRecipeById(token, id)
 
     suspend fun getTechniqueById(token: String, id: Int) = apiService.getTechniqueById(token, id)
+
+    suspend fun getFavoriteUser(token: String) = apiService.getFavoriteUser(token)
 }

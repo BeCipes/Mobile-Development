@@ -12,6 +12,7 @@ import com.development.gocipes.core.data.remote.response.detail.DetailCategoryRe
 import com.development.gocipes.core.data.remote.response.detail.DetailIngridientResponse
 import com.development.gocipes.core.data.remote.response.detail.DetailRecipeResponse
 import com.development.gocipes.core.data.remote.response.detail.DetailTechniqueResponse
+import com.development.gocipes.core.data.remote.response.favorite.GetFavoriteResponse
 import com.development.gocipes.core.data.remote.response.food.FoodResponse
 import com.development.gocipes.core.data.remote.response.step.StepResponse
 import com.development.gocipes.core.data.remote.response.technique.TechniqueResponse
@@ -111,4 +112,9 @@ interface ApiService {
         @Header("Authorization") token: String,
         @Path("id") id: Int
     ): DetailTechniqueResponse
+
+    @GET("favorite")
+    suspend fun getFavoriteUser(
+        @Header("Authorization") token: String
+    ): GetFavoriteResponse
 }

@@ -7,23 +7,30 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.development.gocipes.core.data.local.dummy.DummyFavorite
+import com.development.gocipes.core.data.remote.response.favorite.GetFavoriteItem
 import com.development.gocipes.core.domain.model.favorite.Favorite
 import com.development.gocipes.databinding.FragmentFavoriteBinding
 import com.development.gocipes.core.presentation.adapter.FavoriteAdapter
+import com.development.gocipes.core.utils.Result
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class FavoriteFragment : Fragment() {
 
     private var _binding: FragmentFavoriteBinding? = null
     private val binding get() = _binding
     private lateinit var favoriteAdapter: FavoriteAdapter
+    private val viewModel by viewModels<FavoriteViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,14 +42,36 @@ class FavoriteFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val listFavorite = DummyFavorite.dummyFavorite
-        setupRecyclerFavorite(listFavorite)
+        getFavoriteObserver()
         setupToolbar()
     }
 
-    private fun setupRecyclerFavorite(favorite: List<Favorite>) {
-        favoriteAdapter = FavoriteAdapter()
+    private fun getFavoriteObserver() {
+        viewModel.getFavoriteUser().observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is Result.Error -> {
+//                    onResult()
+                    Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
+                }
+
+                is Result.Loading -> {
+//                    onLoading()
+                }
+
+                is Result.Success -> {
+//                    onResult()
+                    setupRecyclerFavorite(result.data)
+                }
+            }
+        }
+    }
+    
+
+
+    private fun setupRecyclerFavorite(favorite: List<GetFavoriteItem>) {
+        favoriteAdapter = FavoriteAdapter {
+
+        }
 
         binding?.rvFavorite?.apply {
             adapter = favoriteAdapter

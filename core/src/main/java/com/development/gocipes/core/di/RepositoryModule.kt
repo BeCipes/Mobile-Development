@@ -2,11 +2,13 @@ package com.development.gocipes.core.di
 
 import com.development.gocipes.core.data.repository.ArticleRepositoryImpl
 import com.development.gocipes.core.data.repository.AuthRepositoryImpl
+import com.development.gocipes.core.data.repository.FavoriteRepositoryImpl
 import com.development.gocipes.core.data.repository.FoodRepositoryImpl
 import com.development.gocipes.core.data.repository.IngridientRepositoryImpl
 import com.development.gocipes.core.data.repository.TechniqueRepositoryImpl
 import com.development.gocipes.core.domain.repository.ArticleRepository
 import com.development.gocipes.core.domain.repository.AuthRepository
+import com.development.gocipes.core.domain.repository.FavoriteRepository
 import com.development.gocipes.core.domain.repository.FoodRepository
 import com.development.gocipes.core.domain.repository.IngridientRepository
 import com.development.gocipes.core.domain.repository.TechniqueRepository
@@ -39,4 +41,8 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun provideIngridientRepository(ingridientRepositoryImpl: IngridientRepositoryImpl): IngridientRepository
+
+    @Binds
+    @Singleton
+    abstract fun provideFavoriteRepository(favoriteRepositoryImpl: FavoriteRepositoryImpl): FavoriteRepository
 }
