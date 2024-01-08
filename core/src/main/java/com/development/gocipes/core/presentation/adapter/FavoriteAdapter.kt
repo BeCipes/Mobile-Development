@@ -5,13 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.development.gocipes.core.data.remote.response.analysis.IngridientItem
 import com.development.gocipes.core.data.remote.response.favorite.GetFavoriteItem
 import com.development.gocipes.core.databinding.ItemFavoriteBinding
-import com.development.gocipes.core.domain.model.favorite.Favorite
 import com.development.gocipes.core.utils.Extensions.showImage
 
-class FavoriteAdapter (val data: (String) -> Unit) :
+class FavoriteAdapter (val id: (Int) -> Unit) :
     ListAdapter<GetFavoriteItem, FavoriteAdapter.FavoriteViewHolder>(
     DIFF_CALLBACK
 ) {
@@ -37,6 +35,7 @@ class FavoriteAdapter (val data: (String) -> Unit) :
 //                tvCategory.text = categoryNames.joinToString(", ")
                 tvTimerContainer.tvTime.text = "20 menit"
             }
+            itemView.setOnClickListener { id.invoke(favorite.resep?.id ?: 0) }
         }
     }
 

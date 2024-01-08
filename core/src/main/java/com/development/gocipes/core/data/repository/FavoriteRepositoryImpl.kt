@@ -3,6 +3,7 @@ package com.development.gocipes.core.data.repository
 import com.development.gocipes.core.data.local.LocalDataSource
 import com.development.gocipes.core.data.remote.RemoteDataSource
 import com.development.gocipes.core.data.remote.response.favorite.GetFavoriteItem
+import com.development.gocipes.core.data.remote.response.food.FoodItem
 import com.development.gocipes.core.domain.repository.FavoriteRepository
 import com.development.gocipes.core.utils.Result
 import com.development.gocipes.core.utils.TokenHelper
@@ -30,6 +31,18 @@ class FavoriteRepositoryImpl @Inject constructor(
                 emit(Result.Success(result))
         } catch (e: HttpException) {
             emit(Result.Error(e.message()))
+        }
+    }.flowOn(Dispatchers.IO)
+
+    override fun getRecipeById(id: Int): Flow<Result<FoodItem>> = flow {
+        emit(Result.Loading())
+        try {
+            val token = TokenHelper.generateToken(local.getToken())
+            val response = remoteDataSource.getRecipeById(token, id)
+            val result = response.data
+            if (result != null) emit(Result.Success(result))
+        } catch (e: Exception) {
+            emit(Result.Error(e.message))
         }
     }.flowOn(Dispatchers.IO)
 }

@@ -71,7 +71,11 @@
         android:id="@+id/favoriteFragment"
         android:name="com.development.gocipes.presentation.profile.favorite.FavoriteFragment"
         android:label="fragment_favorite"
-        tools:layout="@layout/fragment_favorite" />
+        tools:layout="@layout/fragment_favorite" >
+        <action
+            android:id="@+id/action_favoriteFragment_to_detailFavoriteFragment"
+            app:destination="@id/detailFavoriteFragment" />
+    </fragment>
     <fragment
         android:id="@+id/foodFragment"
         android:name="com.development.gocipes.presentation.home.food.FoodFragment"
@@ -198,4 +202,13 @@
         android:name="com.development.gocipes.presentation.profile.infoapp.InfoAppFragment"
         android:label="fragment_info_app"
         tools:layout="@layout/fragment_info_app" />
+    <fragment
+        android:id="@+id/detailFavoriteFragment"
+        android:name="com.development.gocipes.presentation.profile.favorite.DetailFavoriteFragment"
+        android:label="fragment_detail_favorite"
+        tools:layout="@layout/fragment_detail_favorite" >
+        <argument
+            android:name="id"
+            app:argType="integer" />
+    </fragment>
 </navigation>

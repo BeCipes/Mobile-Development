@@ -20,19 +20,19 @@ data class GetFavoriteResponse(
 data class InformasiGizi(
 
 	@field:SerializedName("karbohidrat")
-	val karbohidrat: String? = null,
+	val karbohidrat: Int? = null,
 
 	@field:SerializedName("protein")
-	val protein: String? = null,
+	val protein: Int? = null,
 
 	@field:SerializedName("lemak")
-	val lemak: String? = null
+	val lemak: Int? = null
 )
 
 data class Resep(
 
 	@field:SerializedName("bahan")
-	val bahan: List<String?>? = null,
+	val bahan: List<String>? = null,
 
 	@field:SerializedName("informasi_gizi")
 	val informasiGizi: InformasiGizi? = null,

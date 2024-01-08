@@ -16,12 +16,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.development.gocipes.core.data.local.dummy.DummyFavorite
 import com.development.gocipes.core.data.remote.response.favorite.GetFavoriteItem
-import com.development.gocipes.core.domain.model.favorite.Favorite
-import com.development.gocipes.databinding.FragmentFavoriteBinding
 import com.development.gocipes.core.presentation.adapter.FavoriteAdapter
 import com.development.gocipes.core.utils.Result
+import com.development.gocipes.databinding.FragmentFavoriteBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -69,16 +67,21 @@ class FavoriteFragment : Fragment() {
 
 
     private fun setupRecyclerFavorite(favorite: List<GetFavoriteItem>) {
-        favoriteAdapter = FavoriteAdapter {
 
+        favoriteAdapter = FavoriteAdapter { id ->
+            navigateToDetail(id)
         }
-
         binding?.rvFavorite?.apply {
             adapter = favoriteAdapter
             layoutManager = LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
         }
 
         favoriteAdapter.submitList(favorite)
+    }
+
+    private fun navigateToDetail(id: Int) {
+        val action = FavoriteFragmentDirections.actionFavoriteFragmentToDetailFavoriteFragment(id)
+        findNavController().navigate(action)
     }
 
     private fun setupToolbar() {
