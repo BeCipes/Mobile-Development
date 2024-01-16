@@ -24,6 +24,7 @@ import com.development.gocipes.core.presentation.adapter.IngredientAdapter
 import com.development.gocipes.core.utils.Extensions.showImage
 import com.development.gocipes.core.utils.Result
 import com.development.gocipes.databinding.FragmentDetailFoodBinding
+import com.development.gocipes.presentation.profile.favorite.FavoriteViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import com.development.gocipes.core.R as Resource
 
@@ -37,6 +38,7 @@ class DetailFoodFragment : Fragment() {
     private var statusFavorite: Boolean = false
     private lateinit var ingredientAdapter: IngredientAdapter
     private val viewModel by viewModels<DetailFoodViewModel>()
+    private val favoriteViewModel by viewModels<FavoriteViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -129,7 +131,7 @@ class DetailFoodFragment : Fragment() {
                 return when (menuItem.itemId) {
                     com.development.gocipes.R.id.btn_favorite -> {
                         statusFavorite = !statusFavorite
-                        setIsFavorite(statusFavorite)
+                        setIsFavorite(statusFavorite, food?.id ?: 0)
                         true
                     }
 
@@ -144,15 +146,38 @@ class DetailFoodFragment : Fragment() {
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
-    private fun setIsFavorite(favorite: Boolean) {
+    private fun setIsFavorite(favorite: Boolean, id: Int) {
         if (menuDetail == null) return
         val menuItem = menuDetail?.findItem(com.development.gocipes.R.id.btn_favorite)
         if (favorite) {
             menuItem?.icon =
                 ContextCompat.getDrawable(requireActivity(), Resource.drawable.ic_favorite)
+            favoriteViewModel.addFavorite(id).observe(viewLifecycleOwner) { result ->
+                when (result) {
+                    is Result.Error -> {
+                        Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
+                    }
+                    is Result.Loading -> {}
+                    is Result.Success -> {
+                        favorite
+                        Toast.makeText(context, "${result.data.resep?.namaResep} ditambahkan ke Favorite", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
         } else {
             menuItem?.icon =
                 ContextCompat.getDrawable(requireActivity(), Resource.drawable.ic_favorite_border)
+            favoriteViewModel.deleteFavorite(id).observe(viewLifecycleOwner) { result ->
+                when (result) {
+                    is Result.Error -> {
+                        Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
+                    }
+                    is Result.Loading -> {}
+                    is Result.Success -> {
+                        !favorite
+                    }
+                }
+            }
         }
     }
 

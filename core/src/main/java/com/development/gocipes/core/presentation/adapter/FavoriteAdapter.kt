@@ -9,10 +9,10 @@ import com.development.gocipes.core.data.remote.response.favorite.GetFavoriteIte
 import com.development.gocipes.core.databinding.ItemFavoriteBinding
 import com.development.gocipes.core.utils.Extensions.showImage
 
-class FavoriteAdapter (val id: (Int) -> Unit) :
+class FavoriteAdapter(val id: (Int) -> Unit) :
     ListAdapter<GetFavoriteItem, FavoriteAdapter.FavoriteViewHolder>(
-    DIFF_CALLBACK
-) {
+        DIFF_CALLBACK
+    ) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteViewHolder {
         val binding =
@@ -44,12 +44,12 @@ class FavoriteAdapter (val id: (Int) -> Unit) :
             object : DiffUtil.ItemCallback<GetFavoriteItem>() {
                 override fun areItemsTheSame(
                     oldItem: GetFavoriteItem,
-                    newItem: GetFavoriteItem
+                    newItem: GetFavoriteItem,
                 ) = oldItem == newItem
 
                 override fun areContentsTheSame(
                     oldItem: GetFavoriteItem,
-                    newItem: GetFavoriteItem
+                    newItem: GetFavoriteItem,
                 ) = oldItem == newItem
             }
     }

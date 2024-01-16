@@ -161,7 +161,7 @@ class HomeFragment : Fragment() {
 
     private fun setupRecyclerCategory(categories: List<Category>) {
         categoryAdapter = CategoryAdapter { category ->
-
+            navigateToCategory(category)
         }
 
         binding?.contentHome?.rvCategory?.apply {
@@ -274,11 +274,11 @@ class HomeFragment : Fragment() {
     }
 
     private fun navigateToCategory(category: Category) {
-//        val action =
-//            HomeFragmentDirections.actionHomeFragmentToCategoryFragment(
-////                category
-//            )
-//        findNavController().navigate(action)
+        val action =
+            HomeFragmentDirections.actionHomeFragmentToCategoryFragment(
+                category
+            )
+        findNavController().navigate(action)
     }
 
     override fun onDestroy() {

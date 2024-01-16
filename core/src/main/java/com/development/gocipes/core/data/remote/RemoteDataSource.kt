@@ -40,4 +40,10 @@ class RemoteDataSource @Inject constructor(
     suspend fun getTechniqueById(token: String, id: Int) = apiService.getTechniqueById(token, id)
 
     suspend fun getFavoriteUser(token: String) = apiService.getFavoriteUser(token)
+
+    suspend fun addFavorite(token: String, idRecipe: Int) = apiService.addFavorite(token, idRecipe)
+
+    suspend fun deleteFavorite(token: String, idRecipe: Int) = apiService.deleteFavorite(token, idRecipe)
+
+    suspend fun getRecipesByCategory(token: String, idCategory: Int) = apiService.getDetailCategory(token, idCategory)
 }

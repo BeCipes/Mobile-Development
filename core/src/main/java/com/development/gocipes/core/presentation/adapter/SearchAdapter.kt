@@ -10,7 +10,8 @@ import com.development.gocipes.core.domain.model.food.Food
 import com.development.gocipes.core.utils.Extensions.showImage
 import java.util.Locale
 
-class SearchAdapter(val data: (Food) -> Unit) : ListAdapter<Food, SearchAdapter.SearchViewHolder>(DIFF_CALLBACK) {
+class SearchAdapter(val data: (Food) -> Unit) :
+    ListAdapter<Food, SearchAdapter.SearchViewHolder>(DIFF_CALLBACK) {
 
     private var unFilteredList = listOf<Food>()
 

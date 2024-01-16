@@ -1,4 +1,4 @@
-package com.development.gocipes.presentation.analysis
+package com.development.gocipes.presentation.analysis.detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData

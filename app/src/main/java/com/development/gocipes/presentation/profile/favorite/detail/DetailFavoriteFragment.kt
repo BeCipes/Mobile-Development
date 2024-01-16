@@ -1,4 +1,4 @@
-package com.development.gocipes.presentation.profile.favorite
+package com.development.gocipes.presentation.profile.favorite.detail
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -22,6 +22,7 @@ import com.development.gocipes.core.presentation.adapter.IngredientAdapter
 import com.development.gocipes.core.utils.Extensions.showImage
 import com.development.gocipes.core.utils.Result
 import com.development.gocipes.databinding.FragmentDetailFavoriteBinding
+import com.development.gocipes.presentation.profile.favorite.FavoriteViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

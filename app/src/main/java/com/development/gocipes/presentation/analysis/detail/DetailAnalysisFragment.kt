@@ -1,4 +1,4 @@
-package com.development.gocipes.presentation.analysis
+package com.development.gocipes.presentation.analysis.detail
 
 import android.os.Bundle
 import android.view.LayoutInflater

@@ -14,4 +14,7 @@ class FavoriteViewModel @Inject constructor(
 
     fun getRecipeById(id: Int) = repository.getRecipeById(id).asLiveData()
 
+    fun addFavorite(id: Int) = repository.addFavorite(id).asLiveData()
+
+    fun deleteFavorite(id: Int) = repository.deleteFavorite(id).asLiveData()
 }

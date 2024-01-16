@@ -8,11 +8,14 @@ import com.development.gocipes.core.data.remote.response.auth.LoginResponse
 import com.development.gocipes.core.data.remote.response.auth.RegisterResponse
 import com.development.gocipes.core.data.remote.response.category.CategoryResponse
 import com.development.gocipes.core.data.remote.response.detail.DetailArticleResponse
+import com.development.gocipes.core.data.remote.response.detail.DetailCategoryRecipeResponse
 import com.development.gocipes.core.data.remote.response.detail.DetailCategoryResponse
 import com.development.gocipes.core.data.remote.response.detail.DetailIngridientResponse
 import com.development.gocipes.core.data.remote.response.detail.DetailRecipeResponse
 import com.development.gocipes.core.data.remote.response.detail.DetailTechniqueResponse
+import com.development.gocipes.core.data.remote.response.favorite.DeleteFavoriteResponse
 import com.development.gocipes.core.data.remote.response.favorite.GetFavoriteResponse
+import com.development.gocipes.core.data.remote.response.favorite.InsertFavoriteResponse
 import com.development.gocipes.core.data.remote.response.food.FoodResponse
 import com.development.gocipes.core.data.remote.response.step.StepResponse
 import com.development.gocipes.core.data.remote.response.technique.TechniqueResponse
@@ -81,7 +84,7 @@ interface ApiService {
     suspend fun getFoodById(
         @Header("Authorization") token: String,
         @Path("id") id: Int
-    ): DetailCategoryResponse
+    ): DetailCategoryRecipeResponse
 
     @GET("data/bahan/{bahanId}")
     suspend fun getIngridientById(
@@ -117,4 +120,23 @@ interface ApiService {
     suspend fun getFavoriteUser(
         @Header("Authorization") token: String
     ): GetFavoriteResponse
+
+    @FormUrlEncoded
+    @POST("favorite")
+    suspend fun addFavorite(
+        @Header("Authorization") token: String,
+        @Field("id_resep") id: Int
+    ): InsertFavoriteResponse
+
+    @POST("favorite/{id}")
+    suspend fun deleteFavorite(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int
+    ): DeleteFavoriteResponse
+
+    @GET("data/resep/kategori/{id}")
+    suspend fun getDetailCategory(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int
+    ): DetailCategoryResponse
 }

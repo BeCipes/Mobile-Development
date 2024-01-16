@@ -125,18 +125,18 @@
         android:name="com.development.gocipes.presentation.home.category.CategoryFragment"
         android:label="fragment_category"
         tools:layout="@layout/fragment_category">
-        <argument
-            android:name="category"
-            app:argType="com.development.gocipes.core.domain.model.food.Category" />
         <action
             android:id="@+id/action_categoryFragment_to_detailFoodFragment"
             app:destination="@id/detailFoodFragment" />
+        <argument
+            android:name="category"
+            app:argType="com.development.gocipes.core.data.remote.response.category.Category" />
     </fragment>
     <include app:graph="@navigation/article_graph" />
     <include app:graph="@navigation/technique_graph" />
     <fragment
         android:id="@+id/detailAnalysisFragment"
-        android:name="com.development.gocipes.presentation.analysis.DetailAnalysisFragment"
+        android:name="com.development.gocipes.presentation.analysis.detail.DetailAnalysisFragment"
         android:label="fragment_detail_analysis"
         tools:layout="@layout/fragment_detail_analysis" >
         <argument
@@ -204,7 +204,7 @@
         tools:layout="@layout/fragment_info_app" />
     <fragment
         android:id="@+id/detailFavoriteFragment"
-        android:name="com.development.gocipes.presentation.profile.favorite.DetailFavoriteFragment"
+        android:name="com.development.gocipes.presentation.profile.favorite.detail.DetailFavoriteFragment"
         android:label="fragment_detail_favorite"
         tools:layout="@layout/fragment_detail_favorite" >
         <argument
