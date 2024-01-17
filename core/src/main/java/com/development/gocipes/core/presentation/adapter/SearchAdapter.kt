@@ -10,7 +10,7 @@ import com.development.gocipes.core.databinding.ItemSearchBinding
 import com.development.gocipes.core.utils.Extensions.showImage
 import java.util.Locale
 
-class SearchAdapter(val data: (FoodItem) -> Unit) :
+class SearchAdapter(val id: (Int) -> Unit) :
     ListAdapter<FoodItem, SearchAdapter.SearchViewHolder>(DIFF_UTIL) {
 
     private var unFilteredList = listOf<FoodItem>()
@@ -26,13 +26,13 @@ class SearchAdapter(val data: (FoodItem) -> Unit) :
 
     inner class SearchViewHolder(private val binding: ItemSearchBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(food: FoodItem) {
+        fun  bind(food: FoodItem) {
             binding.apply {
                 sivFood.showImage(itemView.context, food.gambar ?: "")
                 tvName.text = food.namaResep
             }
 
-            itemView.setOnClickListener { data.invoke(food) }
+            itemView.setOnClickListener { id.invoke(food.id ?: 0) }
         }
     }
 

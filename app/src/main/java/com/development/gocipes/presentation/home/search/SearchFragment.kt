@@ -110,8 +110,8 @@ class SearchFragment : Fragment() {
 
     private fun setupRecyclerView(data: List<FoodItem>) {
 
-        searchAdapter = SearchAdapter{ food ->
-//            navigateToDetailFood(food)
+        searchAdapter = SearchAdapter{ id ->
+            navigateToDetailFood(id)
         }
 
         binding?.rvSearch?.apply {
@@ -139,9 +139,9 @@ class SearchFragment : Fragment() {
         }
     }
 
-    private fun navigateToDetailFood(food: Food) {
-//        val action = SearchFragmentDirections.actionSearchFragmentToDetailFoodFragment(food)
-//        findNavController().navigate(action)
+    private fun navigateToDetailFood(id: Int) {
+        val action = SearchFragmentDirections.actionSearchFragmentToDetailFoodFragment(id)
+        findNavController().navigate(action)
     }
 
     override fun onDestroy() {
