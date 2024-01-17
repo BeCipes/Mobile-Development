@@ -5,15 +5,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.development.gocipes.core.data.remote.response.food.FoodItem
 import com.development.gocipes.core.databinding.ItemSearchBinding
-import com.development.gocipes.core.domain.model.food.Food
 import com.development.gocipes.core.utils.Extensions.showImage
 import java.util.Locale
 
-class SearchAdapter(val data: (Food) -> Unit) :
-    ListAdapter<Food, SearchAdapter.SearchViewHolder>(DIFF_CALLBACK) {
+class SearchAdapter(val data: (FoodItem) -> Unit) :
+    ListAdapter<FoodItem, SearchAdapter.SearchViewHolder>(DIFF_UTIL) {
 
-    private var unFilteredList = listOf<Food>()
+    private var unFilteredList = listOf<FoodItem>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {
         val binding = ItemSearchBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -26,28 +26,28 @@ class SearchAdapter(val data: (Food) -> Unit) :
 
     inner class SearchViewHolder(private val binding: ItemSearchBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(food: Food) {
+        fun bind(food: FoodItem) {
             binding.apply {
-                sivFood.showImage(itemView.context, food.imageUrl)
-                tvName.text = food.name
+                sivFood.showImage(itemView.context, food.gambar ?: "")
+                tvName.text = food.namaResep
             }
 
             itemView.setOnClickListener { data.invoke(food) }
         }
     }
 
-    fun modifyList(list: List<Food>) {
+    fun modifyList(list: List<FoodItem>) {
         unFilteredList = list
         submitList(list)
     }
 
     fun filter(query: CharSequence?) {
-        val list = mutableListOf<Food>()
+        val list = mutableListOf<FoodItem>()
 
         if (!query.isNullOrEmpty()) {
             list.addAll(unFilteredList.filter {
-                it.name.lowercase(Locale.getDefault())
-                    .contains(query.toString().lowercase(Locale.getDefault()))
+                it.namaResep?.lowercase(Locale.getDefault())
+                    ?.contains(query.toString().lowercase(Locale.getDefault())) ?: false
             })
         } else {
             list.addAll(unFilteredList)
@@ -57,14 +57,13 @@ class SearchAdapter(val data: (Food) -> Unit) :
     }
 
     companion object {
-        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Food>() {
-            override fun areItemsTheSame(oldItem: Food, newItem: Food): Boolean {
-                return oldItem == newItem
-            }
+        val DIFF_UTIL =
+            object : DiffUtil.ItemCallback<FoodItem>() {
+                override fun areItemsTheSame(oldItem: FoodItem, newItem: FoodItem) =
+                    oldItem == newItem
 
-            override fun areContentsTheSame(oldItem: Food, newItem: Food): Boolean {
-                return oldItem == newItem
+                override fun areContentsTheSame(oldItem: FoodItem, newItem: FoodItem) =
+                    oldItem == newItem
             }
-        }
     }
 }
