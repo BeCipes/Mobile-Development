@@ -53,6 +53,7 @@ class AnalysisFragment : Fragment() {
                 is Result.Success -> {
                     onResult()
                     setupRecycler(result.data)
+                    setupSearchBar()
                 }
             }
         }
@@ -70,6 +71,18 @@ class AnalysisFragment : Fragment() {
             }
         }
         adapterAnalysis.submitList(listIngridient)
+    }
+
+    private fun setupSearchBar() {
+        binding?.searchBar?.setOnClickListener {
+            navigateToSearch()
+        }
+    }
+
+    private fun navigateToSearch() {
+        val action =
+            AnalysisFragmentDirections.actionAnalysisFragmentToAnalysisSearchFragment()
+        findNavController().navigate(action)
     }
 
     private fun navigateToDetail(id: Int) {

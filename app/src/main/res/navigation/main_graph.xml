@@ -51,6 +51,9 @@
         <action
             android:id="@+id/action_analysisFragment_to_detailAnalysisFragment"
             app:destination="@id/detailAnalysisFragment" />
+        <action
+            android:id="@+id/action_analysisFragment_to_analysisSearchFragment"
+            app:destination="@id/analysisSearchFragment" />
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
@@ -213,5 +216,13 @@
         <action
             android:id="@+id/action_detailFavoriteFragment_to_cookFragment"
             app:destination="@id/cookFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/analysisSearchFragment"
+        android:name="com.development.gocipes.presentation.analysis.search.AnalysisSearchFragment"
+        android:label="AnalysisSearchFragment" >
+        <action
+            android:id="@+id/action_analysisSearchFragment_to_detailAnalysisFragment"
+            app:destination="@id/detailAnalysisFragment" />
     </fragment>
 </navigation>
