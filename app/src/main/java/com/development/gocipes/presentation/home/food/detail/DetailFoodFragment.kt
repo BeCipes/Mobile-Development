@@ -35,7 +35,7 @@ class DetailFoodFragment : Fragment() {
     private val binding get() = _binding
     private val navArgs by navArgs<DetailFoodFragmentArgs>()
     private var menuDetail: Menu? = null
-    private var statusFavorite: Boolean = false
+//    private var statusFavorite: Boolean = false
     private lateinit var ingredientAdapter: IngredientAdapter
     private val viewModel by viewModels<DetailFoodViewModel>()
     private val favoriteViewModel by viewModels<FavoriteViewModel>()
@@ -122,28 +122,38 @@ class DetailFoodFragment : Fragment() {
 
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(object : MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menuInflater.inflate(com.development.gocipes.R.menu.menu_detail, menu)
-                menuDetail = menu
-            }
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {}
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                return when (menuItem.itemId) {
-                    com.development.gocipes.R.id.btn_favorite -> {
-                        statusFavorite = !statusFavorite
-                        setIsFavorite(statusFavorite, food?.id ?: 0)
-                        true
-                    }
-
-                    android.R.id.home -> {
-                        requireActivity().onBackPressedDispatcher.onBackPressed()
-                        true
-                    }
-
-                    else -> false
-                }
+                findNavController().navigateUp()
+                return true
             }
-        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+        }, viewLifecycleOwner, Lifecycle.State.CREATED)
+
+//        val menuHost: MenuHost = requireActivity()
+//        menuHost.addMenuProvider(object : MenuProvider {
+//            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+//                menuInflater.inflate(com.development.gocipes.R.menu.menu_detail, menu)
+//                menuDetail = menu
+//            }
+//
+//            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+//                return when (menuItem.itemId) {
+//                    com.development.gocipes.R.id.btn_favorite -> {
+//                        statusFavorite = !statusFavorite
+//                        setIsFavorite(statusFavorite, food?.id ?: 0)
+//                        true
+//                    }
+//
+//                    android.R.id.home -> {
+//                        requireActivity().onBackPressedDispatcher.onBackPressed()
+//                        true
+//                    }
+//
+//                    else -> false
+//                }
+//            }
+//        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
     private fun setIsFavorite(favorite: Boolean, id: Int) {
