@@ -118,7 +118,7 @@
         tools:layout="@layout/fragment_search" >
         <action
             android:id="@+id/action_searchFragment_to_detailFoodFragment"
-            app:destination="@id/detailFoodFragment" />
+            app:destination="@id/detailFavoriteFragment" />
     </fragment>
     <fragment
         android:id="@+id/categoryFragment"
