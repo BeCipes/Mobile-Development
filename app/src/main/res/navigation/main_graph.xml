@@ -210,5 +210,8 @@
         <argument
             android:name="id"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_detailFavoriteFragment_to_cookFragment"
+            app:destination="@id/cookFragment" />
     </fragment>
 </navigation>

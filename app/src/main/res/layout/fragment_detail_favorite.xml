@@ -44,6 +44,21 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_cook"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="@string/start_cook"
+        android:layout_marginHorizontal="16dp"
+        android:textSize="16sp"
+        android:textColor="@color/white"
+        app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Medium"
+        android:fontFamily="@font/poppins_semi_bold"
+        app:layout_constraintTop_toTopOf="@id/bottom_view"
+        app:layout_constraintStart_toStartOf="@id/bottom_view"
+        app:layout_constraintEnd_toEndOf="@id/bottom_view"
+        app:layout_constraintBottom_toBottomOf="@id/bottom_view" />
+
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/shimmer"
         android:layout_width="match_parent"

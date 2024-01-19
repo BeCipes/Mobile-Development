@@ -89,6 +89,15 @@ class DetailFavoriteFragment : Fragment() {
         }
         setupRecyclerIngredient(food?.bahan ?: emptyList())
         setupToolbar(food)
+        binding?.btnCook?.setOnClickListener { navigateToCook(food?.id ?: 0) }
+    }
+
+    private fun navigateToCook(id: Int) {
+        val action =
+            DetailFavoriteFragmentDirections.actionDetailFavoriteFragmentToCookFragment(
+                id
+            )
+        findNavController().navigate(action)
     }
 
     private fun setupRecyclerIngredient(listIngredient: List<String>) {
